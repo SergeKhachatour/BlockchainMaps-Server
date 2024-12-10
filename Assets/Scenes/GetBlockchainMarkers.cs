@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class GetBlockchainMarkers : MonoBehaviour
 {
     [Header("Map References")]
-    [SerializeField] private OnlineMaps map;           // Assign in inspector
+    [SerializeField] private OnlineMaps map; 
     [SerializeField] private OnlineMapsControlBase control;
     [SerializeField] private OnlineMapsMarkerManager markerMGR;
     public GameObject markerPrefab;
@@ -482,7 +482,6 @@ public class GetBlockchainMarkers : MonoBehaviour
     private void ParseJson(string jsonString)
     {
         JArray jsonArray = JArray.Parse(jsonString);
-        // ... rest of the parsing code ...
     }
 
     private double CalculateDistance(double lon1, double lat1, double lon2, double lat2)
@@ -517,5 +516,4 @@ public class GetBlockchainMarkers : MonoBehaviour
         }
     }
 
-    // ... rest of your existing methods (ResumeAfterFrame, etc.) ...
 }
