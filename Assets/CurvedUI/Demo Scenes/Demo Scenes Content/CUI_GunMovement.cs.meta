@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: ecf5234e5e13740a090810d98086d328
+timeCreated: 1455977016
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Demo Scenes/Demo Scenes Content/CUI_GunMovement.cs
+  uploadId: 630511

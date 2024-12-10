@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b4d6485c257874646b5d46ab8a0cfa6b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Scripts/CurvedUIPhysicsRaycaster.cs
+  uploadId: 630511

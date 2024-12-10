@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d10cbeeea58fa0441b1bb92c83da6e6e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Demo Scenes/Demo Scenes Content/CUI_ChangeColor.cs
+  uploadId: 630511

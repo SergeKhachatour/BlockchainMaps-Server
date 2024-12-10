@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0472aa2e752b0024da18ef6977db9e68
+timeCreated: 1544385427
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/CurvedUI_changelog.txt
+  uploadId: 630511

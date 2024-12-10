@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 06c69c9d191620c4ab0298cf166e8a43
+timeCreated: 1453329406
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Demo Scenes/05 VRMenuGaze.unity
+  uploadId: 630511

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: b9d18c9c9ec93e0409354ed5f04463f1
+timeCreated: 1465031212
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Demo Scenes/Demo Scenes Content/CUI_touchpad.cs
+  uploadId: 630511

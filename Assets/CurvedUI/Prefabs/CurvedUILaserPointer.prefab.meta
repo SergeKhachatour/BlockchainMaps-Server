@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bcd9d94a56f575340a261fb992072904
+timeCreated: 1528073705
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Prefabs/CurvedUILaserPointer.prefab
+  uploadId: 630511

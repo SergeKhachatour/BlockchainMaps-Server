@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 367959482ff0f0948b11d2021ee48a8b
+timeCreated: 1461966372
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Scripts/CurvedUILaserBeam.cs
+  uploadId: 630511

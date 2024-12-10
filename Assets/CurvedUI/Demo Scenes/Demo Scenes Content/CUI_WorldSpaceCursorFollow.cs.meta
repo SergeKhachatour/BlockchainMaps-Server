@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 5da4fac42ba88a14aa79010b056f5c35
+timeCreated: 1455376524
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53258
+  packageName: Curved UI - VR Ready Solution To Bend / Warp Your Canvas!
+  packageVersion: 3.4
+  assetPath: Assets/CurvedUI/Demo Scenes/Demo Scenes Content/CUI_WorldSpaceCursorFollow.cs
+  uploadId: 630511
