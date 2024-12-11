@@ -21,7 +21,7 @@ public class GetBlockchainMarkers : MonoBehaviour
     public Texture2D markerTexture;
     public bool use3DMarkers = true;
     private string apiUrl = "http://localhost:3001/api/base_markers";
-    public string bearerToken = "unityapp-api-key-654321";
+    [SerializeField] private ApiConfig apiConfig;
     public GameObject stellarMarkerPrefab;
     public GameObject usdcMarkerPrefab;
     [SerializeField] private Material laserMaterial;
@@ -308,7 +308,7 @@ public class GetBlockchainMarkers : MonoBehaviour
     {
         Debug.Log($"Fetching markers from: {apiUrl}");
         UnityWebRequest request = UnityWebRequest.Get(apiUrl);
-        request.SetRequestHeader("Authorization", "Bearer " + bearerToken);
+        request.SetRequestHeader("Authorization", "Bearer " + apiConfig.BearerToken);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)

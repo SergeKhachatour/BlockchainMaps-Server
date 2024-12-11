@@ -191,6 +191,7 @@
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\WebServices\Results\OnlineMapsGooglePlacesAutocompleteResult.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Examples\Scripts\UIBubblePopup.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\XML\OnlineMapsXML.cs" />
+    <Compile Include="Assets\Scripts\Config\ApiConfig.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\CacheTilesExample.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\Plugins\OnlineMapsCache.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\Markers\Drawers\OnlineMapsMarkerBufferDrawer.cs" />
