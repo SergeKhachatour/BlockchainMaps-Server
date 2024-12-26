@@ -625,8 +625,16 @@
       <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="stellar-dotnet-sdk-xdr">
+      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk-xdr.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="stellar-dotnet-sdk">
+      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.TextureAssets">
@@ -639,14 +647,6 @@
     </Reference>
     <Reference Include="zxing.unity">
       <HintPath>Assets\Plugins\zxing.unity.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="stellar-dotnet-sdk">
-      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="stellar-dotnet-sdk-xdr">
-      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk-xdr.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">
