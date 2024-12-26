@@ -1,14 +1,31 @@
+using Mirror;
+using Mirror.SimpleWeb;
 using System;
 using System.Net;
 using System.Net.Sockets;
-using Mirror;
-using UnityEngine;
 using kcp2k;
+using UnityEngine;
 
-namespace Edgegap
+namespace Mirror.Transports.Edgegap.EdgegapRelay
 {
+    public enum MessageType : byte
+    {
+        Ping = 1,
+        Data = 2
+    }
+
+    public enum ConnectionState
+    {
+        Disconnected,
+        Checking,
+        Connected
+    }
+
     public class EdgegapKcpServer : KcpServer
     {
+        // ping interval in seconds
+        const float PingInterval = 1f;
+
         // need buffer larger than KcpClient.rawReceiveBuffer to add metadata
         readonly byte[] relayReceiveBuffer;
 
@@ -33,10 +50,9 @@ namespace Edgegap
             Action<int> OnDisconnected,
             Action<int, ErrorCode, string> OnError,
             KcpConfig config)
-              // TODO don't call base. don't listen to local UdpServer at all?
               : base(OnConnected, OnData, OnDisconnected, OnError, config)
         {
-            relayReceiveBuffer = new byte[config.Mtu + Protocol.Overhead];
+            relayReceiveBuffer = new byte[config.Mtu + Kcp.OVERHEAD];
         }
 
         public override bool IsActive() => relayActive;
@@ -50,23 +66,32 @@ namespace Edgegap
             this.sessionId = sessionId;
 
             // try resolve host name
-            if (!Common.ResolveHostname(relayAddress, out IPAddress[] addresses))
+            try
             {
-                OnError(0, ErrorCode.DnsResolve, $"Failed to resolve host: {relayAddress}");
-                return;
+                IPAddress[] addresses = Dns.GetHostAddresses(relayAddress);
+                if (addresses.Length == 0)
+                {
+                    OnError(0, ErrorCode.DnsResolve, $"Failed to resolve host: {relayAddress}");
+                    return;
+                }
+
+                // create socket
+                remoteEndPoint = new IPEndPoint(addresses[0], relayPort);
+                relaySocket = new Socket(remoteEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+                relaySocket.Blocking = false;
+
+                // configure buffer sizes
+                relaySocket.ReceiveBufferSize = config.RecvBufferSize;
+                relaySocket.SendBufferSize = config.SendBufferSize;
+
+                // bind to endpoint for Send/Receive instead of SendTo/ReceiveFrom
+                relaySocket.Connect(remoteEndPoint);
+                relayActive = true;
             }
-
-            // create socket
-            remoteEndPoint = new IPEndPoint(addresses[0], relayPort);
-            relaySocket = new Socket(remoteEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-            relaySocket.Blocking = false;
-
-            // configure buffer sizes
-            Common.ConfigureSocketBuffers(relaySocket, config.RecvBufferSize, config.SendBufferSize);
-
-            // bind to endpoint for Send/Receive instead of SendTo/ReceiveFrom
-            relaySocket.Connect(remoteEndPoint);
-            relayActive = true;
+            catch (Exception ex)
+            {
+                OnError(0, ErrorCode.DnsResolve, $"Failed to start server: {ex.Message}");
+            }
         }
 
         public override void Stop()
@@ -136,7 +161,7 @@ namespace Edgegap
             }
             catch (SocketException e)
             {
-                Log.Info($"EdgegapServer: looks like the other end has closed the connection. This is fine: {e}");
+                kcp2k.Log.Info($"EdgegapServer: looks like the other end has closed the connection. This is fine: {e}");
             }
             return false;
         }
@@ -159,7 +184,7 @@ namespace Edgegap
                 }
                 catch (SocketException e)
                 {
-                    Log.Error($"KcpRleayServer: RawSend failed: {e}");
+                    kcp2k.Log.Error($"KcpRleayServer: RawSend failed: {e}");
                 }
             }
         }
@@ -189,7 +214,7 @@ namespace Edgegap
             if (relayActive)
             {
                 // ping every interval for keepalive & handshake
-                if (NetworkTime.localTime >= lastPingTime + Protocol.PingInterval)
+                if (NetworkTime.localTime >= lastPingTime + PingInterval)
                 {
                     SendPing();
                     lastPingTime = NetworkTime.localTime;

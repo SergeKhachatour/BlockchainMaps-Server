@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d74dc575b2087e4891ea934ad134102, type: 3}
+  m_Name: StellarConfig
+  m_EditorClassIdentifier: 
+  UseTestNetwork: 1
+  NetworkPassphrase: Test SDF Network ; September 2015
+  HorizonUrl: https://horizon-testnet.stellar.org
+  secretKey: SCZTVVZDV3AGXCLJ3POJXGQ4JJU2SB535K3F5AF6PWWOMA52ESJSFWTL

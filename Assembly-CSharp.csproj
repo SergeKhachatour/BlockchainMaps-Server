@@ -27,7 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -109,8 +109,8 @@
     <Compile Include="Assets\CurvedUI\Demo Scenes\Demo Scenes Content\CUI_DragBetweenCanvases.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\TooltipWithoutBackgroundExample.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\WebServices\Results\OnlineMapsBingMapsElevationResult.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\CreateMarkerOnClick.cs" />
     <Compile Include="Assets\CurvedUI\Demo Scenes\Demo Scenes Content\CUI_ChangeValueOnHold.cs" />
+    <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\CreateMarkerOnClick.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\WebServices\Results\OnlineMapsOpenRouteServiceDirectionResult.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\TextureFromRWT.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\WebServices\OnlineMapsOSMNominatim.cs" />
@@ -143,8 +143,8 @@
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\ExtraTypes\OnlineMapsPositionRange.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\Markers\Drawers\OnlineMapsMarker2DDrawer.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Examples\Scripts\SearchPanel.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\ChangeProviderAndTypeExample.cs" />
     <Compile Include="Assets\CurvedUI\Demo Scenes\Demo Scenes Content\CUI_draggable.cs" />
+    <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\ChangeProviderAndTypeExample.cs" />
     <Compile Include="Assets\CurvedUI\Scripts\CurvedUIHandSwitcher.cs" />
     <Compile Include="Assets\CurvedUI\Demo Scenes\Demo Scenes Content\CUI_RaycastToCanvas.cs" />
     <Compile Include="Assets\CurvedUI\Scripts\CurvedUISettings.cs" />
@@ -179,6 +179,7 @@
     <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\GoogleTilesAPI.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\Mapbox\OnlineMapsPBFReader.cs" />
     <Compile Include="Assets\CurvedUI\Demo Scenes\Demo Scenes Content\CUI_PerlinNoisePosition.cs" />
+    <Compile Include="Assets\Scripts\Config\StellarConfig.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\ExtraTypes\OnlineMapsRange.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Scripts\Tiles\OnlineMapsRasterTile.cs" />
     <Compile Include="Assets\Infinity Code\Online maps\Examples (API usage)\GPXExample.cs" />
@@ -895,16 +896,48 @@
       <HintPath>Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Pdb.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="dotnetstandard-bip32">
+      <HintPath>Assets\Plugins\dotnetstandard-bip32.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Mono.CecilX.Rocks">
       <HintPath>Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Rocks.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NSec.Cryptography">
+      <HintPath>Assets\Plugins\StellarSDK_Downgraded\NSec.Cryptography.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LaunchDarkly.EventSource">
+      <HintPath>Assets\Plugins\StellarSDK_Downgraded\LaunchDarkly.EventSource.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LaunchDarkly.Logging">
+      <HintPath>Assets\Plugins\LaunchDarkly.Logging.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json\Runtime\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Nett">
+      <HintPath>Assets\Plugins\Nett.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="zxing.unity">
+      <HintPath>Assets\Plugins\zxing.unity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="stellar-dotnet-sdk">
+      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="stellar-dotnet-sdk-xdr">
+      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk-xdr.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">

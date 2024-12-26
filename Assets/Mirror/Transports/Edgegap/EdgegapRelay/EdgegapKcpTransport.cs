@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using Mirror;
 using kcp2k;
+using Mirror.Transports.Edgegap.EdgegapRelay;
 
 namespace Edgegap
 {

@@ -168,7 +168,6 @@ public class CurvedUIInputModule : StandaloneInputModule {
     protected override void Awake()
     {
         #if !CURVEDUI_UNITY_XR
-        forceModuleActive = true;
         #endif
 
         if (!Application.isPlaying) return;
@@ -1142,7 +1141,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
     static T EnableInputModule<T>() where T : BaseInputModule
     {
         var moduleMissing = true;
-        var eventGO = GameObject.FindObjectOfType<EventSystem>();
+        var eventGO = Object.FindAnyObjectByType<EventSystem>();
 
         if (eventGO == null)
         {
