@@ -28,7 +28,7 @@ using stellar_dotnet_sdk.requests;
 public class GetBlockchainMarkers : MonoBehaviour
 {
     [Header("Map References")]
-    [SerializeField] private OnlineMaps map; 
+    [SerializeField] private OnlineMaps map;
     [SerializeField] private OnlineMapsControlBase control;
     [SerializeField] private OnlineMapsMarkerManager markerMGR;
     public GameObject markerPrefab;
@@ -45,6 +45,7 @@ public class GetBlockchainMarkers : MonoBehaviour
     private List<LineRenderer> activeLasers = new List<LineRenderer>();
     private const int MAX_LASERS = 120;
     private GameObject laserContainer;
+    private List<MarkerData> visibleMarkers = new List<MarkerData>(); // Track visible markers
 
     [Header("UI References")]
     [SerializeField] private GameObject markerKeyPrefab;
@@ -66,6 +67,9 @@ public class GetBlockchainMarkers : MonoBehaviour
     public event MarkersLoadedHandler OnMarkersLoaded;
 
     private StellarQRManager qrManager;
+
+    private float lastScanToggleTime = 0f;
+    private const float SCAN_TOGGLE_COOLDOWN = 0.5f; // Half second cooldown
 
     void Start()
     {
@@ -100,7 +104,7 @@ public class GetBlockchainMarkers : MonoBehaviour
             {
                 if (type.Name == "KeyPair" || type.Name == "TransactionBuilder" || type.Name.Contains("Operation"))
                 {
-                    Debug.Log($"Found type: {type.FullName} in namespace {type.Namespace}");
+                    //Debug.Log($"Found type: {type.FullName} in namespace {type.Namespace}");
                 }
             }
         }
@@ -133,6 +137,17 @@ public class GetBlockchainMarkers : MonoBehaviour
             Debug.LogError("One or more required components are missing. Please check the inspector.");
             return;
         }
+
+        // Set up map zoom settings
+        map.zoomRange = new OnlineMapsRange(2, 20);  // Set min and max zoom levels
+        map.zoom = 15;  // Set initial zoom level
+        map.notInteractUnderGUI = true;
+        map.width = 24576;  // Set large tileset width
+        map.height = 24576;  // Set large tileset height
+        map.redrawOnPlay = true;
+
+        // Add zoom change listener
+        map.OnChangeZoom += OnMapZoomChanged;
 
         if (use3DMarkers)
         {
@@ -200,7 +215,7 @@ public class GetBlockchainMarkers : MonoBehaviour
             Debug.Log("Available types in StellarDotnetSdk:");
             foreach (Type type in assembly.GetTypes())
             {
-                Debug.Log($"Type: {type.FullName}");
+                //Debug.Log($"Type: {type.FullName}");
             }
         }
         catch (Exception e)
@@ -280,10 +295,9 @@ public class GetBlockchainMarkers : MonoBehaviour
         // Get visible bounds of the map
         double tlx, tly, brx, bry;
         map.GetTileCorners(out tlx, out tly, out brx, out bry);
-        Debug.Log($"Map visible bounds: TL({tlx}, {tly}) BR({brx}, {bry})");
 
         // Get all 3D markers
-        var visibleMarkers = new List<MarkerData>();
+        visibleMarkers.Clear(); // Clear previous visible markers
         var marker3DManager = OnlineMapsMarker3DManager.instance;
         
         if (marker3DManager != null)
@@ -298,7 +312,6 @@ public class GetBlockchainMarkers : MonoBehaviour
                     // Convert lat/long to tile coordinates
                     double mx, my;
                     OnlineMaps.instance.projection.CoordinatesToTile(markerCoords.x, markerCoords.y, map.zoom, out mx, out my);
-                    Debug.Log($"Marker at lat/long ({markerCoords.x}, {markerCoords.y}) -> tile ({mx}, {my})");
 
                     // Check if marker is visible on map
                     if (mx >= tlx && mx <= brx && my >= tly && my <= bry)
@@ -307,14 +320,20 @@ public class GetBlockchainMarkers : MonoBehaviour
                         if (markerData.publicKey != null)
                         {
                             visibleMarkers.Add(markerData);
-                            Debug.Log($"Added visible marker: {markerData.publicKey}");
                         }
                     }
                 }
             }
-        }
 
-        Debug.Log($"Creating UI for {visibleMarkers.Count} visible markers");
+            // Log visible markers information
+            Debug.Log($"=== Visible Markers ({visibleMarkers.Count}) ===");
+            foreach (var marker in visibleMarkers)
+            {
+                bool isScanned = qrManager != null && qrManager.IsQRCodeScanned(marker.publicKey);
+                Debug.Log($"- {marker.blockchain} Marker: {marker.publicKey} (Scanned: {isScanned})");
+            }
+            Debug.Log("================================");
+        }
 
         // Create UI items for visible markers
         foreach (var marker in visibleMarkers)
@@ -330,7 +349,6 @@ public class GetBlockchainMarkers : MonoBehaviour
                 tmpText.fontSize = 24;
                 tmpText.color = Color.white;
                 tmpText.alignment = TextAlignmentOptions.Left;
-                Debug.Log($"Created UI item: {displayText}");
             }
         }
 
@@ -348,18 +366,30 @@ public class GetBlockchainMarkers : MonoBehaviour
             {
                 Transform markerTransform = laser.transform.parent;
                 Vector3 markerPos = markerTransform.position;
-                Vector3 mapPosition = control.transform.position;
                 
-                laser.SetPosition(0, markerPos);
-                laser.SetPosition(1, new Vector3(markerPos.x, mapPosition.y, markerPos.z));
+                // Update ground laser positions
+                if (laser.name.StartsWith("GroundLaser"))
+                {
+                    Vector3 groundPos = new Vector3(markerPos.x, 0, markerPos.z);
+                    laser.SetPosition(0, groundPos);
+                    laser.SetPosition(1, markerPos);
+                }
             }
         }
 
-        // Check for QR code scanning
-        if (Input.GetKeyDown(KeyCode.E)) // Press E to start scanning
+        // Toggle scanning state with E key (with cooldown)
+        if (Input.GetKeyDown(KeyCode.E) && Time.time - lastScanToggleTime > SCAN_TOGGLE_COOLDOWN)
         {
-            Debug.Log("Started QR code scanning (E pressed)");
-            qrManager.isScanning = true;
+            lastScanToggleTime = Time.time;
+            qrManager.isScanning = !qrManager.isScanning;
+            Debug.Log($"QR scanning {(qrManager.isScanning ? "started" : "stopped")} (E pressed)");
+            
+            // Clean up laser when stopping scan
+            if (!qrManager.isScanning && qrManager.currentLaser != null)
+            {
+                Destroy(qrManager.currentLaser.gameObject);
+                qrManager.currentLaser = null;
+            }
         }
 
         // If scanning is active, check nearby markers
@@ -372,7 +402,12 @@ public class GetBlockchainMarkers : MonoBehaviour
                 {
                     if (marker3D != null && marker3D.instance != null)
                     {
-                        qrManager.ScanQRCode(Camera.main, marker3D.instance.transform.position);
+                        // Only scan Stellar markers since they're the only ones with QR codes
+                        string[] labelParts = marker3D.label.Split('-');
+                        if (labelParts.Length >= 2 && labelParts[1].Trim().ToLower() == "stellar")
+                        {
+                            qrManager.ScanQRCode(Camera.main, marker3D.instance.transform.position);
+                        }
                     }
                 }
             }
@@ -610,43 +645,42 @@ public class GetBlockchainMarkers : MonoBehaviour
             // Adjust settings based on blockchain type
             if (blockchain.ToLower() == "circle" || blockchain.ToLower() == "usdc")
             {
-                marker3D.scale = 100f;  // Made much smaller for USDC/Circle markers
-                marker3D.rotation = Quaternion.Euler(0, 180, 0);//Quaternion.identity;  // Reset rotation
-                marker3D.altitude = 120;  // Slightly higher altitude
+                marker3D.scale = 100f;
+                marker3D.rotation = Quaternion.Euler(0, 180, 0);
+                marker3D.altitude = 120;
                 Debug.Log($"USDC Marker created - Position: {marker3D.transform.position}, Scale: {marker3D.scale}, Rotation: {marker3D.rotation}");
             }
             else
             {
-                marker3D.scale = 10f;  // Original scale for other markers
+                marker3D.scale = 10f;
                 marker3D.rotation = Quaternion.Euler(-90, 180, 0);
-                marker3D.altitude = 72;
+                marker3D.altitude = 52;
             }
 
-            // Create laser
-            GameObject laserObject = new GameObject($"Laser_{label}");
-            laserObject.transform.SetParent(marker3D.transform);
-            laserObject.transform.localPosition = Vector3.zero;
+            // Create ground-to-marker laser
+            GameObject groundLaserObject = new GameObject($"GroundLaser_{label}");
+            groundLaserObject.transform.SetParent(marker3D.transform);
+            groundLaserObject.transform.localPosition = Vector3.zero;
             
-            LineRenderer laser = laserObject.AddComponent<LineRenderer>();
-            laser.material = sharedLaserMaterial != null ? sharedLaserMaterial : laserMaterial;
-            laser.startColor = laser.endColor = Color.red;
-            laser.startWidth = 5f;
-            laser.endWidth = 5f;
-            laser.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            laser.receiveShadows = false;
-            laser.positionCount = 2;
-            laser.useWorldSpace = true;
+            LineRenderer groundLaser = groundLaserObject.AddComponent<LineRenderer>();
+            groundLaser.material = sharedLaserMaterial != null ? sharedLaserMaterial : laserMaterial;
+            groundLaser.startColor = groundLaser.endColor = Color.red;
+            groundLaser.startWidth = 5f;
+            groundLaser.endWidth = 5f;
+            groundLaser.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            groundLaser.receiveShadows = false;
+            groundLaser.positionCount = 2;
+            groundLaser.useWorldSpace = true;
 
-            laser.SetPosition(0, marker3D.transform.position);
-            laser.SetPosition(1, new Vector3(marker3D.transform.position.x, control.transform.position.y, marker3D.transform.position.z));
+            // Set ground laser positions
+            Vector3 groundPosition = new Vector3(marker3D.transform.position.x, 0, marker3D.transform.position.z);
+            groundLaser.SetPosition(0, groundPosition);
+            groundLaser.SetPosition(1, marker3D.transform.position);
 
-            Debug.Log($"Laser created at position: {marker3D.transform.position}, Material: {laser.material.name}, Shader: {laser.material.shader.name}");
-            
-            activeLasers.Add(laser);
+            activeLasers.Add(groundLaser);
 
             if (blockchain.ToLower() == "stellar")
             {
-                // Generate Stellar SEP-0007 URI
                 string stellarUri = GenerateStellarUri(label);
                 qrManager.AttachQRCodeToMarker(marker3D.instance, label, stellarUri);
             }
@@ -696,39 +730,7 @@ public class GetBlockchainMarkers : MonoBehaviour
 
     private void HandleQRScanned(string qrData)
     {
-        string[] parts = qrData.Split('|');
-        if (parts.Length == 2)
-        {
-            string publicKey = parts[0];
-            string uriData = parts[1];
-            
-            // Parse the URI parameters
-            var queryParams = new Dictionary<string, string>();
-            var queryStart = uriData.IndexOf('?');
-            
-            if (queryStart >= 0 && queryStart < uriData.Length - 1)
-            {
-                var queryString = uriData.Substring(queryStart + 1);
-                foreach (var pair in queryString.Split('&'))
-                {
-                    var parts2 = pair.Split(new[] { '=' }, 2);
-                    if (parts2.Length == 2)
-                    {
-                        var key = Uri.UnescapeDataString(parts2[0]);
-                        var value = Uri.UnescapeDataString(parts2[1]);
-                        queryParams[key] = value;
-                    }
-                }
-            }
-
-            // Display payment information
-            Debug.Log("=== Stellar Payment Information ===");
-            Debug.Log($"Destination: {queryParams.GetValueOrDefault("destination")}");
-            Debug.Log($"Amount: {queryParams.GetValueOrDefault("amount")} {queryParams.GetValueOrDefault("asset_code", "XLM")}");
-            Debug.Log($"Network: {queryParams.GetValueOrDefault("network", "Test SDF Network")}");
-            Debug.Log($"Message: {queryParams.GetValueOrDefault("msg", "Payment via map marker")}");
-            Debug.Log("================================");
-        }
+        StartCoroutine(HandleStellarUriCoroutine(qrData.Split('|')[1]));
     }
 
     private IEnumerator HandleStellarUriCoroutine(string uriData)
@@ -1034,7 +1036,7 @@ public class GetBlockchainMarkers : MonoBehaviour
                 { "asset_code", "XLM" },
                 { "network", stellarConfig.NetworkPassphrase ?? "Test SDF Network ; September 2015" },
                 { "msg", "Payment via map marker" },
-                { "origin_domain", "map.example.com" }
+                { "origin_domain", "stellar.fly.com" }
             };
 
             string queryString = string.Join("&", parameters.Select(p => 
@@ -1052,56 +1054,228 @@ public class GetBlockchainMarkers : MonoBehaviour
         }
     }
 
+    private void OnMapZoomChanged()
+    {
+        if (map == null) return;
+        float currentZoom = map.zoom;
+        float tileSize = Mathf.Lerp(1024, 4096, currentZoom / 20f);
+        map.width = (int)tileSize;
+        map.height = (int)tileSize;
+        map.Redraw();
+    }
+
+    public bool IsQRCodeScanned(string publicKey)
+    {
+        return qrManager != null && qrManager.IsQRCodeScanned(publicKey);
+    }
 }
 
 public class StellarQRManager : MonoBehaviour
 {
+    [Header("Map References")]
+    [SerializeField] private OnlineMaps map;
+    [SerializeField] private OnlineMapsControlBase control;
+    [SerializeField] private OnlineMapsMarkerManager markerMGR;
+
+    [Header("Stellar Config")]
+    [SerializeField] private StellarConfig stellarConfig;
+
     private Texture2D qrCodeTexture;
     private Material qrCodeMaterial;
     public bool isScanning = false;
-    public float scanDistance = 2f;
+    public float scanDistance = 3000f;
     private Material laserMaterial;
     public LineRenderer currentLaser;
     public Camera scanningCamera;
+    private Dictionary<string, bool> scannedQRCodesByPublicKey = new Dictionary<string, bool>();
     
     public delegate void QRScannedHandler(string qrData);
     public event QRScannedHandler OnQRScanned;
     
+    private Vector3 lastPosition;
+    private bool isHovering = false;
+    private float hoverThreshold = 0.1f;
+    private float hoverCheckDelay = 0.1f;
+    private LineRenderer pointerLine;
+    private GameObject focusedQRCode;
+
     void Start()
     {
-        // Create laser material
-        laserMaterial = new Material(Shader.Find("Sprites/Default"));
+        Debug.Log("=== Checking Stellar SDK Setup ===");
+        
+        // Initialize StellarConfig if not set
+        if (stellarConfig == null)
+        {
+            stellarConfig = Resources.Load<StellarConfig>("StellarConfig");
+            if (stellarConfig == null)
+            {
+                Debug.LogError("Failed to load StellarConfig from Resources. Please ensure StellarConfig asset exists in a Resources folder.");
+                return;
+            }
+        }
+
+        if (map == null) map = OnlineMaps.instance;
+        if (control == null) control = OnlineMapsControlBase.instance;
+        if (markerMGR == null) markerMGR = OnlineMapsMarkerManager.instance;
+
+        if (map == null || control == null || markerMGR == null)
+        {
+            Debug.LogError("One or more required components are missing. Please check the inspector.");
+            return;
+        }
+
+        // Set up map zoom settings
+        map.zoomRange = new OnlineMapsRange(2, 20);  // Set min and max zoom levels
+        map.zoom = 17;  // Set initial zoom level
+        map.notInteractUnderGUI = true;
+        map.width = 24576;  // Set large tileset width
+        map.height = 24576;  // Set large tileset height
+        map.redrawOnPlay = true;
+
+        // Add zoom change listener
+        map.OnChangeZoom += OnMapZoomChanged;
+
+        laserMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
         laserMaterial.color = Color.red;
+        lastPosition = transform.position;
+        StartCoroutine(CheckHovering());
+        OnQRScanned += HandleQRScanned;
+    }
+
+    public bool IsQRCodeScanned(string publicKey)
+    {
+        return scannedQRCodesByPublicKey.ContainsKey(publicKey) && scannedQRCodesByPublicKey[publicKey];
+    }
+
+    private void HandleQRScanned(string qrData)
+    {
+        Debug.Log($"QR Code scanned: {qrData}");
+        string[] parts = qrData.Split('|');
+        if (parts.Length == 2)
+        {
+            string publicKey = parts[0];
+            Debug.Log($"Marking QR code as scanned for public key: {publicKey}");
+            scannedQRCodesByPublicKey[publicKey] = true;
+        }
+    }
+
+    void Update()
+    {
+        if (isScanning && Camera.main != null)
+        {
+            GameObject[] qrCodes = GameObject.FindGameObjectsWithTag("QRCode");
+            if (qrCodes.Length > 0)
+            {
+                // Find nearest unscanned QR code
+                GameObject nearestQR = null;
+                float nearestDistance = float.MaxValue;
+                foreach (GameObject qr in qrCodes)
+                {
+                    string qrId = qr.GetInstanceID().ToString();
+                    if (scannedQRCodesByPublicKey.ContainsKey(qrId) && scannedQRCodesByPublicKey[qrId]) continue;
+                    
+                    float dist = Vector3.Distance(Camera.main.transform.position, qr.transform.position);
+                    if (dist < nearestDistance && dist <= scanDistance)
+                    {
+                        nearestDistance = dist;
+                        nearestQR = qr;
+                    }
+                }
+
+                if (nearestQR != null)
+                {
+                    // Update or create pointer line
+                    if (pointerLine == null)
+                    {
+                        GameObject pointerObj = new GameObject("QROutlineLaser");
+                        pointerLine = pointerObj.AddComponent<LineRenderer>();
+                        
+                        // Create material with emissive properties
+                        Material pointerMat = new Material(Shader.Find("Particles/Standard Unlit"));
+                        pointerMat.color = new Color(1, 0, 0, 1f); // Fully opaque red
+                        pointerLine.material = pointerMat;
+                        
+                        pointerLine.startWidth = 15.0f;  // Much thicker line
+                        pointerLine.endWidth = 15.0f;    // Much thicker line
+                        pointerLine.positionCount = 5;
+                        pointerLine.loop = true;
+                        pointerLine.useWorldSpace = false; // Use local space for better positioning
+                        
+                        // Ensure it renders on top
+                        pointerLine.sortingOrder = 100;
+                        pointerLine.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                        pointerLine.receiveShadows = false;
+                        pointerLine.material.renderQueue = 4000;
+                    }
+
+                    // Update outline position to match QR code
+                    float markerHeight = nearestQR.transform.parent.name.ToLower().Contains("usdc") ? 120f : 52f;
+                    float qrHeight = markerHeight + 15f; // Same height as QR code
+                    Vector3 qrPosition = nearestQR.transform.position;
+                    pointerLine.transform.position = qrPosition;
+                    pointerLine.transform.rotation = nearestQR.transform.rotation;
+
+                    // Create square outline slightly bigger than QR code
+                    float size = 7.0f;  // Increased outline size
+                    float zOffset = -0.1f; // Offset the line slightly in front of the QR code
+                    Vector3[] points = new Vector3[5]
+                    {
+                        new Vector3(-size, -size, zOffset),
+                        new Vector3(size, -size, zOffset),
+                        new Vector3(size, size, zOffset),
+                        new Vector3(-size, size, zOffset),
+                        new Vector3(-size, -size, zOffset)
+                    };
+
+                    for (int i = 0; i < points.Length; i++)
+                    {
+                        pointerLine.SetPosition(i, points[i]);
+                    }
+
+                    focusedQRCode = nearestQR;
+                }
+            }
+            else if (pointerLine != null)
+            {
+                Destroy(pointerLine.gameObject);
+                pointerLine = null;
+                focusedQRCode = null;
+            }
+        }
+        else if (pointerLine != null)
+        {
+            Destroy(pointerLine.gameObject);
+            pointerLine = null;
+            focusedQRCode = null;
+        }
     }
 
     private void CreateLaserEffect(Vector3 start, Vector3 end, GameObject qrCodeObject)
     {
-        // Clean up previous laser if it exists
         if (currentLaser != null)
         {
             Destroy(currentLaser.gameObject);
         }
 
-        // Get QR code size
-        var qrTransform = qrCodeObject.transform;
-        float qrSize = qrTransform.localScale.x; // Since it's a square, we can use x
-        float laserSize = qrSize * 1.2f; // Make laser slightly bigger than QR code
-
         GameObject laserLine = new GameObject("ScannerLaser");
         currentLaser = laserLine.AddComponent<LineRenderer>();
         
-        currentLaser.material = laserMaterial;
-        currentLaser.startColor = new Color(1, 0, 0, 0.8f);
-        currentLaser.endColor = new Color(1, 0, 0, 0.4f);
-        currentLaser.startWidth = laserSize;
-        currentLaser.endWidth = laserSize;
+        Material laserMat = new Material(Shader.Find("Particles/Standard Unlit"));
+        laserMat.color = new Color(1, 0, 0, 0.8f);
+        currentLaser.material = laserMat;
+        
+        currentLaser.startWidth = 2.0f;
+        currentLaser.endWidth = 0.5f;
+        currentLaser.positionCount = 2;
+        
+        currentLaser.useWorldSpace = true;
         currentLaser.SetPosition(0, start);
         currentLaser.SetPosition(1, end);
-        currentLaser.useWorldSpace = true;
-        
-        // Add glow effect
-        currentLaser.material.EnableKeyword("_EMISSION");
-        currentLaser.material.SetColor("_EmissionColor", new Color(1, 0, 0, 1) * 2f);
+
+        currentLaser.sortingOrder = 100;
+        currentLaser.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        currentLaser.receiveShadows = false;
+        currentLaser.material.renderQueue = 4000;
     }
 
     void OnDestroy()
@@ -1110,6 +1284,136 @@ public class StellarQRManager : MonoBehaviour
             Destroy(laserMaterial);
         if (currentLaser != null)
             Destroy(currentLaser.gameObject);
+        if (pointerLine != null)
+            Destroy(pointerLine.gameObject);
+    }
+
+    public void ResetScannedStatus()
+    {
+        scannedQRCodesByPublicKey.Clear();
+    }
+
+    public void ScanQRCode(Camera camera, Vector3 markerPosition)
+    {
+        if (!isScanning || !isHovering) return;
+
+        GameObject[] qrCodes = GameObject.FindGameObjectsWithTag("QRCode");
+        if (qrCodes.Length == 0) return;
+
+        // Only scan the nearest unscanned QR code
+        GameObject nearestQR = null;
+        float nearestDistance = float.MaxValue;
+        foreach (GameObject qr in qrCodes)
+        {
+            string qrId = qr.GetInstanceID().ToString();
+            if (scannedQRCodesByPublicKey.ContainsKey(qrId) && scannedQRCodesByPublicKey[qrId]) continue;
+            
+            float dist = Vector3.Distance(camera.transform.position, qr.transform.position);
+            if (dist < nearestDistance && dist <= scanDistance)
+            {
+                nearestDistance = dist;
+                nearestQR = qr;
+            }
+        }
+
+        if (nearestQR == null || nearestQR != focusedQRCode) return;
+
+        Vector3 direction = (nearestQR.transform.position - camera.transform.position).normalized;
+        int layerMask = 1 << 8;
+        RaycastHit hit;
+        
+        if (Physics.Raycast(camera.transform.position, direction, out hit, scanDistance, layerMask))
+        {
+            if (hit.collider.gameObject == nearestQR && hit.collider.gameObject.CompareTag("QRCode"))
+            {
+                string qrId = hit.collider.gameObject.GetInstanceID().ToString();
+                if (!scannedQRCodesByPublicKey.ContainsKey(qrId) || !scannedQRCodesByPublicKey[qrId])
+                {
+                    Transform markerTransform = hit.collider.gameObject.transform.parent;
+                    string markerName = markerTransform != null ? markerTransform.name : "Unknown Marker";
+                    
+                    Debug.Log($"Scanning QR code for marker: {markerName}");
+
+                    Vector3 qrCodeCenter = hit.collider.gameObject.transform.position;
+                    CreateLaserEffect(camera.transform.position, qrCodeCenter, hit.collider.gameObject);
+                    
+                    var meshRenderer = hit.collider.GetComponent<MeshRenderer>();
+                    if (meshRenderer != null && meshRenderer.material != null && meshRenderer.material.mainTexture != null)
+                    {
+                        Texture2D qrTexture = meshRenderer.material.mainTexture as Texture2D;
+                        var reader = new BarcodeReader();
+                        var result = reader.Decode(qrTexture.GetPixels32(), qrTexture.width, qrTexture.height);
+                        
+                        if (result != null)
+                        {
+                            Debug.Log($"Successfully decoded QR code for {markerName}: {result.Text}");
+                            scannedQRCodesByPublicKey[qrId] = true;
+                            OnQRScanned?.Invoke(result.Text);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerator CheckHovering()
+    {
+        while (true)
+        {
+            float movement = Vector3.Distance(transform.position, lastPosition);
+            isHovering = movement < hoverThreshold;
+            
+            if (!isHovering && isScanning)
+            {
+                isScanning = false;
+                if (currentLaser != null)
+                {
+                    Destroy(currentLaser.gameObject);
+                    currentLaser = null;
+                }
+            }
+            
+            lastPosition = transform.position;
+            yield return new WaitForSeconds(hoverCheckDelay);
+        }
+    }
+
+    public void AttachQRCodeToMarker(GameObject marker, string publicKey, string uriData)
+    {
+        // Create QR code plane above the marker
+        GameObject qrPlane = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        qrPlane.transform.SetParent(marker.transform);
+        
+        // Position the QR code just above the marker
+        float markerHeight = marker.transform.parent.name.ToLower().Contains("usdc") ? 120f : 52f;
+        float qrHeight = 15f;
+        qrPlane.transform.localPosition = new Vector3(0, qrHeight, 0);
+        
+        // Rotate to face camera and scale appropriately
+        qrPlane.transform.localRotation = Quaternion.Euler(0, 180, 0);
+        qrPlane.transform.localScale = new Vector3(10f, 10f, 10f);
+        qrPlane.tag = "QRCode";
+        
+        qrPlane.layer = 8;
+
+        BoxCollider collider = qrPlane.GetComponent<BoxCollider>();
+        if (collider == null)
+        {
+            collider = qrPlane.AddComponent<BoxCollider>();
+        }
+        collider.isTrigger = true;
+        collider.size = new Vector3(1f, 1f, 0.1f);
+
+        // Generate and apply QR code texture
+        Texture2D qrTexture = GenerateQRCode(publicKey, uriData);
+        Material qrMaterial = new Material(Shader.Find("Unlit/Texture"));
+        qrMaterial.mainTexture = qrTexture;
+        qrMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        
+        MeshRenderer meshRenderer = qrPlane.GetComponent<MeshRenderer>();
+        meshRenderer.material = qrMaterial;
+        meshRenderer.receiveShadows = false;
+        meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     }
 
     public Texture2D GenerateQRCode(string publicKey, string uriData)
@@ -1121,7 +1425,8 @@ public class StellarQRManager : MonoBehaviour
             {
                 Height = 256,
                 Width = 256,
-                Margin = 1
+                Margin = 1,
+                CharacterSet = "UTF-8"
             }
         };
 
@@ -1131,84 +1436,29 @@ public class StellarQRManager : MonoBehaviour
         // Generate QR code
         var color32 = writer.Write(combinedData);
         qrCodeTexture = new Texture2D(256, 256);
+        
+        // Ensure proper black and white colors
+        for (int i = 0; i < color32.Length; i++)
+        {
+            // Convert grayscale to pure black or white
+            color32[i] = color32[i].r < 128 ? new Color32(0, 0, 0, 255) : new Color32(255, 255, 255, 255);
+        }
+        
         qrCodeTexture.SetPixels32(color32);
         qrCodeTexture.Apply();
 
         return qrCodeTexture;
     }
 
-    public void AttachQRCodeToMarker(GameObject marker, string publicKey, string uriData)
+    private void OnMapZoomChanged()
     {
-        // Create QR code plane behind the marker
-        GameObject qrPlane = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        qrPlane.transform.SetParent(marker.transform);
-        qrPlane.transform.localPosition = new Vector3(0, 0, -0.1f); // Slightly behind marker
-        qrPlane.transform.localRotation = Quaternion.Euler(0, 180, 0);
-        qrPlane.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        qrPlane.tag = "QRCode";
-
-        // Generate and apply QR code texture
-        Texture2D qrTexture = GenerateQRCode(publicKey, uriData);
-        Material qrMaterial = new Material(Shader.Find("Standard"));
-        qrMaterial.mainTexture = qrTexture;
-        qrPlane.GetComponent<MeshRenderer>().material = qrMaterial;
-    }
-
-    public void ScanQRCode(Camera camera, Vector3 markerPosition)
-    {
-        if (!isScanning) return;
-
-        RaycastHit hit;
-        Vector3 direction = (markerPosition - camera.transform.position).normalized;
-        
-        Debug.Log($"Scanning from camera at {camera.transform.position} towards marker at {markerPosition}, distance: {Vector3.Distance(camera.transform.position, markerPosition)}");
-
-        if (Physics.Raycast(camera.transform.position, direction, out hit, scanDistance))
-        {
-            Debug.Log($"Raycast hit object: {hit.collider.gameObject.name}, Tag: {hit.collider.gameObject.tag}, Distance: {hit.distance}");
-            
-            if (hit.collider.gameObject.CompareTag("QRCode"))
-            {
-                Debug.Log("Found QR code object, attempting to scan...");
-                // Simulate laser scanning effect with QR code object reference
-                CreateLaserEffect(camera.transform.position, hit.point, hit.collider.gameObject);
-                
-                // Get the QR code texture
-                var meshRenderer = hit.collider.GetComponent<MeshRenderer>();
-                if (meshRenderer == null || meshRenderer.material == null || meshRenderer.material.mainTexture == null)
-                {
-                    Debug.LogError("QR code object is missing required components");
-                    return;
-                }
-                
-                Texture2D qrTexture = meshRenderer.material.mainTexture as Texture2D;
-                Debug.Log($"Got QR texture: {qrTexture != null}, Size: {(qrTexture != null ? $"{qrTexture.width}x{qrTexture.height}" : "null")}");
-                
-                // Decode QR code
-                var reader = new BarcodeReader();
-                var result = reader.Decode(qrTexture.GetPixels32(), qrTexture.width, qrTexture.height);
-                
-                if (result != null)
-                {
-                    Debug.Log($"Successfully decoded QR code: {result.Text}");
-                    string[] parts = result.Text.Split('|');
-                    if (parts.Length >= 1)
-                    {
-                        Debug.Log($"Successfully scanned QR code for PublicKey: {parts[0]}");
-                    }
-                    OnQRScanned?.Invoke(result.Text);
-                    isScanning = false;
-                }
-                else
-                {
-                    Debug.LogError("Failed to decode QR code");
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("No object hit by raycast");
-        }
+        if (map == null) return;
+        float currentZoom = map.zoom;
+        float tileSize = Mathf.Lerp(1024, 4096, currentZoom / 20f);
+        map.width = (int)tileSize;
+        map.height = (int)tileSize;
+        map.Redraw();
     }
 }
+
 

@@ -5,76 +5,31 @@ using Mirror;
 
 public class Movement : NetworkBehaviour {
 	
-	int moveSpeed = 8;
-	float horiz = 0;
-	float vert = 0;
+	public float moveSpeed = 5f;
+	public float verticalSpeedMultiplier = 0.3f;
+	public float rotateSpeed = 60f;
 	public bool haveControl = false;
 	
-	public override void OnStartLocalPlayer()
+	void Update()
 	{
-		base.OnStartLocalPlayer();
-		Debug.Log("Local player started");
-		haveControl = true;  // Automatically give control to local player
-	}
+		if (!isLocalPlayer) return;
 
-	public override void OnStartClient()
-	{
-		base.OnStartClient();
-		Debug.Log("Client started");
-	}
+		// Horizontal movement
+		float horizontal = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+		float vertical = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
-	void Start()
-	{
-		Debug.Log("Object started");
-		Debug.Log($"Network State - isServer: {isServer}, isClient: {isClient}, isLocalPlayer: {isLocalPlayer}, isOwned: {isOwned}");
-		
-		// Request authority if we're the local player
-		if (isLocalPlayer && !isOwned)
+		// Apply vertical speed multiplier to W/S movement (up/down)
+		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
 		{
-			Debug.Log("Requesting authority");
-			NetworkIdentity identity = GetComponent<NetworkIdentity>();
-			identity.AssignClientAuthority(connectionToClient);
+			vertical *= verticalSpeedMultiplier;
 		}
 
-		if (NetworkServer.active && NetworkClient.active)
-		{
-			Debug.Log("We are the host");
-		}
-		else if (NetworkClient.active)
-		{
-			Debug.Log("We are just a client");
-		}
-	}
+		transform.Translate(horizontal, vertical, 0);
 
-	void FixedUpdate(){
-		if(!isLocalPlayer) return;
-		
-		if(haveControl){
-			vert = Input.GetAxis("Vertical");
-			horiz = Input.GetAxis("Horizontal");
-			Vector3 newVelocity = (transform.right * horiz * moveSpeed) + (transform.forward * vert * moveSpeed);
-			Vector3 myVelocity = GetComponent<Rigidbody>().linearVelocity;
-			myVelocity.x = newVelocity.x;
-			myVelocity.z = newVelocity.z;
-			
-			if(myVelocity != GetComponent<Rigidbody>().linearVelocity){
-				if(isServer){
-					CmdMovePlayer(myVelocity);
-				}
-				else{
-					CmdMovePlayer(myVelocity);
-				}
-			}
-		}
-	}
-	
-	[Command]
-	void CmdMovePlayer(Vector3 playerVelocity){
-		GetComponent<Rigidbody>().linearVelocity = playerVelocity;
-		RpcUpdatePlayer(transform.position);
-	}
-	[ClientRpc]
-	void RpcUpdatePlayer(Vector3 playerPos){
-		transform.position = playerPos;
+		// Rotation
+		if (Input.GetKey(KeyCode.Q))
+			transform.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
+		if (Input.GetKey(KeyCode.E))
+			transform.Rotate(-Vector3.forward * rotateSpeed * Time.deltaTime);
 	}
 }
