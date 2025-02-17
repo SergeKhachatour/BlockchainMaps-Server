@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using CurvedUI;
 using TMPro;
+using BlockchainMaps.Authentication;
 
 public class BaseMarkerUI : MonoBehaviour
 {

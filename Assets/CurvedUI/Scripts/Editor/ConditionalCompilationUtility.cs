@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Build;
 using Debug = UnityEngine.Debug;
 
 namespace CurvedUI.ConditionalCompilation
@@ -32,11 +33,34 @@ namespace CurvedUI.ConditionalCompilation
     {
         const string k_EnableCCU = "UNITY_CCU";
 
-        public static bool enabled {
+        static BuildTargetGroup GetCurrentBuildTargetGroup()
+        {
+            // Default to Standalone if we can't determine the platform
+            if (!Enum.IsDefined(typeof(BuildTargetGroup), EditorUserBuildSettings.selectedBuildTargetGroup))
+                return BuildTargetGroup.Standalone;
+
+            return EditorUserBuildSettings.selectedBuildTargetGroup;
+        }
+
+        public static bool enabled
+        {
             get
             {
-                var buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-                return PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Contains(k_EnableCCU);
+                try
+                {
+                    var buildTargetGroup = GetCurrentBuildTargetGroup();
+                    #if UNITY_2021_2_OR_NEWER
+                    var defines = PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup));
+                    #else
+                    var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+                    #endif
+                    return defines != null && defines.Contains(k_EnableCCU);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[CCU] Error checking enabled status: {e.Message}");
+                    return false;
+                }
             }
         }
 
@@ -44,91 +68,65 @@ namespace CurvedUI.ConditionalCompilation
 
         static ConditionalCompilationUtility()
         {
-            var buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(';').ToList();
-            if (!defines.Contains(k_EnableCCU, StringComparer.OrdinalIgnoreCase))
+            try
             {
-                defines.Add(k_EnableCCU);
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, string.Join(";", defines.ToArray()));
+                var buildTargetGroup = GetCurrentBuildTargetGroup();
+                string currentDefines;
+                
+                #if UNITY_2021_2_OR_NEWER
+                currentDefines = PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup));
+                #else
+                currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+                #endif
 
-                // This will trigger another re-compile, which needs to happen, so all the custom attributes will be visible
-                return;
+                // Ensure we have a valid string to work with
+                if (string.IsNullOrEmpty(currentDefines))
+                    currentDefines = k_EnableCCU;
+                
+                var definesList = new List<string>(currentDefines.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                
+                if (!definesList.Contains(k_EnableCCU, StringComparer.OrdinalIgnoreCase))
+                {
+                    definesList.Add(k_EnableCCU);
+                    try
+                    {
+                        #if UNITY_2021_2_OR_NEWER
+                        PlayerSettings.SetScriptingDefineSymbols(
+                            UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup),
+                            string.Join(";", definesList.ToArray()));
+                        #else
+                        PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, string.Join(";", definesList.ToArray()));
+                        #endif
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"[CCU] Failed to set initial define symbols: {e.Message}");
+                    }
+                    return;
+                }
+
+                var ccuDefines = new List<string> { k_EnableCCU };
+                ConditionalCompilationUtility.defines = ccuDefines.ToArray();
+
+                try
+                {
+                    #if UNITY_2021_2_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(
+                        UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup),
+                        string.Join(";", definesList.ToArray()));
+                    #else
+                    PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, string.Join(";", definesList.ToArray()));
+                    #endif
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[CCU] Failed to set final define symbols: {e.Message}");
+                }
             }
-
-            var ccuDefines = new List<string> { k_EnableCCU };
-
-            var conditionalAttributeType = typeof(ConditionalAttribute);
-
-            const string kDependentClass = "dependentClass";
-            const string kDefine = "define";
-
-            var attributeTypes = GetAssignableTypes(typeof(Attribute), type =>
+            catch (Exception e)
             {
-                var conditionals = (ConditionalAttribute[])type.GetCustomAttributes(conditionalAttributeType, true);
-
-                foreach (var conditional in conditionals)
-                {
-                    if (string.Equals(conditional.ConditionString, k_EnableCCU, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var dependentClassField = type.GetField(kDependentClass);
-                        if (dependentClassField == null)
-                        {
-                            Debug.LogErrorFormat("[CCU] Attribute type {0} missing field: {1}", type.Name, kDependentClass);
-                            return false;
-                        }
-
-                        var defineField = type.GetField(kDefine);
-                        if (defineField == null)
-                        {
-                            Debug.LogErrorFormat("[CCU] Attribute type {0} missing field: {1}", type.Name, kDefine);
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
-                return false;
-            });
-
-            var dependencies = new Dictionary<string, string>();
-            ForEachAssembly(assembly =>
-            {
-                var typeAttributes = assembly.GetCustomAttributes(false).Cast<Attribute>();
-                foreach (var typeAttribute in typeAttributes)
-                {
-                    if (attributeTypes.Contains(typeAttribute.GetType()))
-                    {
-                        var t = typeAttribute.GetType();
-
-                        // These fields were already validated in a previous step
-                        var dependentClass = t.GetField(kDependentClass).GetValue(typeAttribute) as string;
-                        var define = t.GetField(kDefine).GetValue(typeAttribute) as string;
-
-                        if (!string.IsNullOrEmpty(dependentClass) && !string.IsNullOrEmpty(define) && !dependencies.ContainsKey(dependentClass))
-                            dependencies.Add(dependentClass, define);
-                    }
-                }
-            });
-
-            ForEachAssembly(assembly =>
-            {
-                foreach (var dependency in dependencies)
-                {
-                    var type = assembly.GetType(dependency.Key);
-                    if (type != null)
-                    {
-                        var define = dependency.Value;
-                        if (!defines.Contains(define, StringComparer.OrdinalIgnoreCase))
-                            defines.Add(define);
-
-                        ccuDefines.Add(define);
-                    }
-                }
-            });
-
-            ConditionalCompilationUtility.defines = ccuDefines.ToArray();
-
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, string.Join(";", defines.ToArray()));
+                Debug.LogError($"[CCU] Error in static constructor: {e.Message}");
+            }
         }
 
         static void ForEachAssembly(Action<Assembly> callback)

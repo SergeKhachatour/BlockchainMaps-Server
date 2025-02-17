@@ -1,0 +1,30 @@
+WebGL Template Images Required:
+
+1. unity-logo-dark.png
+2. progress-bar-empty-dark.png
+3. progress-bar-full-dark.png
+4. webgl-logo.png
+5. fullscreen-button.png
+6. favicon.ico
+
+You can get these files from one of these sources:
+
+1. Copy from Unity's default WebGL template folder:
+   Path: C:\Program Files\Unity\Hub\Editor\[YOUR_UNITY_VERSION]\Editor\Data\PlaybackEngines\WebGLSupport\BuildTools\WebGLTemplates\Default\TemplateData
+
+2. Or download from Unity's official WebGL template repository:
+   https://github.com/Unity-Technologies/UnityCsReference/tree/master/Runtime/Export/WebGL/TemplateData
+
+3. Or use these direct links:
+   - unity-logo-dark.png: https://raw.githubusercontent.com/Unity-Technologies/UnityCsReference/master/Runtime/Export/WebGL/TemplateData/unity-logo-dark.png
+   - progress-bar-empty-dark.png: https://raw.githubusercontent.com/Unity-Technologies/UnityCsReference/master/Runtime/Export/WebGL/TemplateData/progress-bar-empty-dark.png
+   - progress-bar-full-dark.png: https://raw.githubusercontent.com/Unity-Technologies/UnityCsReference/master/Runtime/Export/WebGL/TemplateData/progress-bar-full-dark.png
+   - webgl-logo.png: https://raw.githubusercontent.com/Unity-Technologies/UnityCsReference/master/Runtime/Export/WebGL/TemplateData/webgl-logo.png
+   - fullscreen-button.png: https://raw.githubusercontent.com/Unity-Technologies/UnityCsReference/master/Runtime/Export/WebGL/TemplateData/fullscreen-button.png
+   - favicon.ico: https://raw.githubusercontent.com/Unity-Technologies/UnityCsReference/master/Runtime/Export/WebGL/TemplateData/favicon.ico
+
+Steps to add the files:
+1. Create a folder named 'TemplateData' in your WebGL template if it doesn't exist
+2. Copy all the above files into the TemplateData folder
+3. Make sure the file names match exactly with what's referenced in style.css
+4. Rebuild your WebGL project 

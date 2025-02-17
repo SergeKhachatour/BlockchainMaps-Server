@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>UNITY_6000_0_27;UNITY_6000_0;UNITY_6000;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;UNITY_2023_1_OR_NEWER;UNITY_2023_2_OR_NEWER;UNITY_2023_3_OR_NEWER;UNITY_6000_0_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_MARSHALLING_TESTS;ENABLE_VIDEO;ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;TEXTCORE_1_0_OR_NEWER;EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_NVIDIA;ENABLE_AMD;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;PLATFORM_USES_EXPLICIT_MEMORY_MANAGER_INITIALIZER;PLATFORM_SUPPORTS_WAIT_FOR_PRESENTATION;PLATFORM_SUPPORTS_SPLIT_GRAPHICS_JOBS;ENABLE_MONO;NET_4_6;NET_UNITY_4_8;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;TEXTCORE_TEXT_ENGINE_1_5_OR_NEWER;EDGEGAP_PLUGIN_SERVERS;MIRROR;MIRROR_81_OR_NEWER;MIRROR_82_OR_NEWER;MIRROR_83_OR_NEWER;MIRROR_84_OR_NEWER;MIRROR_85_OR_NEWER;MIRROR_86_OR_NEWER;MIRROR_89_OR_NEWER;MIRROR_90_OR_NEWER;MIRROR_93_OR_NEWER;UNITY_CCU;CURVEDUI_TMP;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER;UNITY_EDITOR_ONLY_COMPILATION</DefineConstants>
+    <DefineConstants>UNITY_6000_0_27;UNITY_6000_0;UNITY_6000;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;UNITY_2023_1_OR_NEWER;UNITY_2023_2_OR_NEWER;UNITY_2023_3_OR_NEWER;UNITY_6000_0_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CLOTH;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;RENDER_SOFTWARE_CURSOR;ENABLE_MARSHALLING_TESTS;ENABLE_VIDEO;ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;TEXTCORE_1_0_OR_NEWER;EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED;PLATFORM_WEBGL;UNITY_WEBGL;UNITY_WEBGL_API;UNITY_DISABLE_WEB_VERIFICATION;UNITY_GFX_USE_PLATFORM_VSYNC;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_SPATIALTRACKING;ENABLE_MONO;NET_4_6;NET_UNITY_4_8;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;TEXTCORE_TEXT_ENGINE_1_5_OR_NEWER;EDGEGAP_PLUGIN_SERVERS;MIRROR;MIRROR_81_OR_NEWER;MIRROR_82_OR_NEWER;MIRROR_83_OR_NEWER;MIRROR_84_OR_NEWER;MIRROR_85_OR_NEWER;MIRROR_86_OR_NEWER;MIRROR_89_OR_NEWER;MIRROR_90_OR_NEWER;MIRROR_93_OR_NEWER;UNITY_CCU;CURVEDUI_TMP;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER;UNITY_EDITOR_ONLY_COMPILATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
@@ -51,67 +51,11 @@
     <UnityProjectGeneratorVersion>2.0.22</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>Legacy</UnityProjectGeneratorStyle>
     <UnityProjectType>Editor:5</UnityProjectType>
-    <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
+    <UnityBuildTarget>WebGL:20</UnityBuildTarget>
     <UnityVersion>6000.0.27f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Plugins\OnlineMapsLimitsEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Managers\OnlineMapsMarkerManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Buildings\OnlineMapsBuildingBaseEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsControlBaseUIEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsMapboxElevationManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsNGUITextureControlEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsTilesetControlEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\OnlineMapsPackageManager.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsElevationManagerBaseEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsControlBase2DEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Windows\OnlineMapsCustomURLWizard.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsArcGISElevationManagerEditor.cs" />
-    <Compile Include="Assets\CurvedUI\Scripts\Editor\CurvedUIScriptOrder.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Managers\OnlineMapsMarkerManager3DEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Third-Party\OnlineMapsEasyTouchConnectorEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Windows\OnlineMapsWizard.cs" />
-    <Compile Include="Assets\CurvedUI\Scripts\Editor\CurvedUIInputModuleEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Managers\OnlineMapsMarkerManagerBaseEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsControlBaseEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsBingMapsElevationManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\PropertyDrawers\OnlineMapsMarkerPropertyDrawer.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\PropertyDrawers\OnlineMapsRangePropertyDrawer.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Buildings\OnlineMapsBuildingsEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\PropertyDrawers\OnlineMapsMarkerBasePropertyDrawer.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Plugins\OnlineMapsCacheEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\OnlineMapsEditorUtils.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsArcGISTiledElevationManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsTiledElevationManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\OnlineMapsImporter.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\PropertyDrawers\OnlineMapsBuildingMaterialPropertyDrawer.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsControlBase3DEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Windows\OnlineMapsUpdater.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Third-Party\OnlineMapsFingersTouchGesturesConnectorEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsBingMapsTiledElevationManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Windows\OnlineMapsAboutWindow.cs" />
-    <Compile Include="Assets\CurvedUI\Scripts\Editor\CurvedUISettingsEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Third-Party\OnlineMapsUContextActions.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsUIRawImageControlEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsUIImageControlEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsTextureControlEditor.cs" />
-    <Compile Include="Assets\CurvedUI\Scripts\Editor\ConditionalCompilationUtility.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Third-Party\OnlineMapsRWTConnectorEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\EditorLayout\OnlineMapsFormattedEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\PropertyDrawers\OnlineMapsMarker3DPropertyDrawer.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\LocationService\OnlineMapsLocationServiceEditor.cs" />
-    <Compile Include="Assets\CurvedUI\Scripts\Editor\CurvedUIHandSwitcherEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\LocationService\OnlineMapsLocationServiceEditorBase.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Plugins\OnlineMapsCameraOrbitEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Windows\OnlineMapsWelcome.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\OnlineMapsPrefs.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Elevations\OnlineMapsSinglePartElevationManagerEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Plugins\OnlineMapsAdjustToScreenEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsSpriteRendererControlEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Third-Party\OnlineMapsTouchScriptConnectorEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Third-Party\OnlineMapsPanoConnectorEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\OnlineMapsEditor.cs" />
-    <Compile Include="Assets\Infinity Code\Online maps\Scripts\Editor\Controls\OnlineMapsControlBaseDynamicMeshEditor.cs" />
+    <Compile Include="Assets\Editor\WebGLBuildProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -402,6 +346,10 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.27f1\Editor\Data\Managed\UnityEngine\UnityEngine.VirtualTexturingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.WebGLModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.27f1\Editor\Data\PlaybackEngines\WebGLSupport\Managed\UnityEngine.WebGLModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.WindModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.27f1\Editor\Data\Managed\UnityEngine\UnityEngine.WindModule.dll</HintPath>
       <Private>False</Private>
@@ -643,7 +591,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="dotnetstandard-bip32">
-      <HintPath>Assets\Plugins\dotnetstandard-bip32.dll</HintPath>
+      <HintPath>Assets\Plugins\StellarSDK\dotnetstandard-bip32.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="StellarDotnetSdk.Xdr">
+      <HintPath>Assets\Plugins\StellarSDK\StellarDotnetSdk.Xdr.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Mono.CecilX.Rocks">
@@ -671,15 +623,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="LaunchDarkly.Logging">
-      <HintPath>Assets\Plugins\LaunchDarkly.Logging.dll</HintPath>
+      <HintPath>Assets\Plugins\StellarSDK\LaunchDarkly.Logging.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="stellar-dotnet-sdk-xdr">
-      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk-xdr.dll</HintPath>
+      <HintPath>Assets\Plugins\StellarSDK\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
@@ -695,11 +643,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nett">
-      <HintPath>Assets\Plugins\Nett.dll</HintPath>
+      <HintPath>Assets\Plugins\StellarSDK\Nett.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="zxing.unity">
-      <HintPath>Assets\Plugins\zxing.unity.dll</HintPath>
+    <Reference Include="stellar-dotnet-sdk-xdr">
+      <HintPath>Assets\Plugins\StellarSDK\stellar-dotnet-sdk-xdr.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">
@@ -1340,6 +1288,14 @@
       <Project>{5FCDBE66-E874-D1E7-F141-8993199DE73B}</Project>
       <Name>Mirror.Components</Name>
     </ProjectReference>
+    <ProjectReference Include="CurvedUI.csproj">
+      <Project>{8521F6CD-9B64-04CC-3209-A9F89B178140}</Project>
+      <Name>CurvedUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="BlockchainMaps.Authentication.Editor.csproj">
+      <Project>{963B0A66-00DF-114C-5E2E-7B78EF17571B}</Project>
+      <Name>BlockchainMaps.Authentication.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="EncryptionTransportEditor.csproj">
       <Project>{6DCF53A5-C492-52B8-2E70-AACC7985DFDA}</Project>
       <Name>EncryptionTransportEditor</Name>
@@ -1355,6 +1311,14 @@
     <ProjectReference Include="Mirror.Editor.csproj">
       <Project>{E5D6EBC5-0F9B-BD6A-76E5-F3652586D47A}</Project>
       <Name>Mirror.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="InfinityCode.OnlineMaps.Editor.csproj">
+      <Project>{7D529260-3387-73A1-2B47-32015B8EE703}</Project>
+      <Name>InfinityCode.OnlineMaps.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="CurvedUI.Editor.csproj">
+      <Project>{8720C5DF-88D8-5FBB-E5B6-7338141FF3EF}</Project>
+      <Name>CurvedUI.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Edgegap.csproj">
       <Project>{8E139B95-0700-590B-01A3-2C0D157EEE1E}</Project>
@@ -1372,6 +1336,10 @@
       <Project>{BB462F40-AE1F-C070-072C-99DC73086BAD}</Project>
       <Name>SimpleWebTransport</Name>
     </ProjectReference>
+    <ProjectReference Include="InfinityCode.OnlineMaps.csproj">
+      <Project>{B25A788E-067E-B38D-672A-8FDEFFE292DC}</Project>
+      <Name>InfinityCode.OnlineMaps</Name>
+    </ProjectReference>
     <ProjectReference Include="Mirror.Examples.csproj">
       <Project>{2CFF7689-B8F3-F041-42B3-AD894B1BC570}</Project>
       <Name>Mirror.Examples</Name>
@@ -1379,6 +1347,10 @@
     <ProjectReference Include="Mirror.Transports.csproj">
       <Project>{3C5BC3C3-FFF5-8222-B460-D3D6303A2668}</Project>
       <Name>Mirror.Transports</Name>
+    </ProjectReference>
+    <ProjectReference Include="BlockchainMaps.csproj">
+      <Project>{7151988D-D85E-8FFC-889B-10C6102A2FF6}</Project>
+      <Name>BlockchainMaps</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

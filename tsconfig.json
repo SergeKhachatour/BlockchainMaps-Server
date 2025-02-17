@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["dom", "es2015"],
+        "outDir": "./dist"
+    },
+    "include": [
+        "node_modules/passkey-kit/packages/passkey-kit-sdk/src/**/*"
+    ]
+} 

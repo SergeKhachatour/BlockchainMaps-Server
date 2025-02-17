@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "@stellar/stellar-sdk": "^13.1.0",
+    "passkey-kit": "^0.10.10"
+  },
+  "name": "blockchainmaps-server",
+  "description": "A Unity-based visualization tool that combines blockchain data with interactive 3D mapping and curved UI interfaces.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "stream-browserify": "^3.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "util": "^0.12.5",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  }
+}
