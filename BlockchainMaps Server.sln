@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirror.Editor", "Mirror.Edi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirror.Transports", "Mirror.Transports.csproj", "{3C5BC3C3-FFF5-8222-B460-D3D6303A2668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainMaps", "BlockchainMaps.csproj", "{7151988D-D85E-8FFC-889B-10C6102A2FF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainMaps.Authentication", "BlockchainMaps.Authentication.csproj", "{237048EC-2A61-3C9E-C783-421795ED4066}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kcp2k", "kcp2k.csproj", "{4FB9082F-F998-DFAB-C26B-890A3B00CA24}"
 EndProject
@@ -27,15 +27,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWebTransport", "SimpleWebTransport.csproj", "{BB462F40-AE1F-C070-072C-99DC73086BAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainMaps", "BlockchainMaps.csproj", "{7151988D-D85E-8FFC-889B-10C6102A2FF6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirror.Authenticators", "Mirror.Authenticators.csproj", "{10F7285A-F735-078A-C626-6A836A5CA884}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionTransportEditor", "EncryptionTransportEditor.csproj", "{6DCF53A5-C492-52B8-2E70-AACC7985DFDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainMaps.Editor", "BlockchainMaps.Editor.csproj", "{3CECA320-16B3-A6FA-9DBB-2D6B1C433C54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telepathy", "Telepathy.csproj", "{DDBBE8AB-811B-6018-7D41-7AE040A06AB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurvedUI", "CurvedUI.csproj", "{8521F6CD-9B64-04CC-3209-A9F89B178140}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurvedUI.Editor", "CurvedUI.Editor.csproj", "{8720C5DF-88D8-5FBB-E5B6-7338141FF3EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainMaps.Soroban", "BlockchainMaps.Soroban.csproj", "{3E1E5BC0-372B-6B34-CE4F-26256BB32DC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainMaps.Authentication.Editor", "BlockchainMaps.Authentication.Editor.csproj", "{963B0A66-00DF-114C-5E2E-7B78EF17571B}"
 EndProject
@@ -85,10 +91,10 @@ Global
 		{3C5BC3C3-FFF5-8222-B460-D3D6303A2668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C5BC3C3-FFF5-8222-B460-D3D6303A2668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C5BC3C3-FFF5-8222-B460-D3D6303A2668}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{237048EC-2A61-3C9E-C783-421795ED4066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{237048EC-2A61-3C9E-C783-421795ED4066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{237048EC-2A61-3C9E-C783-421795ED4066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{237048EC-2A61-3C9E-C783-421795ED4066}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FB9082F-F998-DFAB-C26B-890A3B00CA24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FB9082F-F998-DFAB-C26B-890A3B00CA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FB9082F-F998-DFAB-C26B-890A3B00CA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -101,6 +107,10 @@ Global
 		{BB462F40-AE1F-C070-072C-99DC73086BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB462F40-AE1F-C070-072C-99DC73086BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB462F40-AE1F-C070-072C-99DC73086BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7151988D-D85E-8FFC-889B-10C6102A2FF6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10F7285A-F735-078A-C626-6A836A5CA884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10F7285A-F735-078A-C626-6A836A5CA884}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10F7285A-F735-078A-C626-6A836A5CA884}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -109,6 +119,10 @@ Global
 		{6DCF53A5-C492-52B8-2E70-AACC7985DFDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DCF53A5-C492-52B8-2E70-AACC7985DFDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DCF53A5-C492-52B8-2E70-AACC7985DFDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CECA320-16B3-A6FA-9DBB-2D6B1C433C54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CECA320-16B3-A6FA-9DBB-2D6B1C433C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CECA320-16B3-A6FA-9DBB-2D6B1C433C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CECA320-16B3-A6FA-9DBB-2D6B1C433C54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DDBBE8AB-811B-6018-7D41-7AE040A06AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DDBBE8AB-811B-6018-7D41-7AE040A06AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDBBE8AB-811B-6018-7D41-7AE040A06AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,6 +135,10 @@ Global
 		{8720C5DF-88D8-5FBB-E5B6-7338141FF3EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8720C5DF-88D8-5FBB-E5B6-7338141FF3EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8720C5DF-88D8-5FBB-E5B6-7338141FF3EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E1E5BC0-372B-6B34-CE4F-26256BB32DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E1E5BC0-372B-6B34-CE4F-26256BB32DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E1E5BC0-372B-6B34-CE4F-26256BB32DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1E5BC0-372B-6B34-CE4F-26256BB32DC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{963B0A66-00DF-114C-5E2E-7B78EF17571B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{963B0A66-00DF-114C-5E2E-7B78EF17571B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{963B0A66-00DF-114C-5E2E-7B78EF17571B}.Release|Any CPU.ActiveCfg = Release|Any CPU

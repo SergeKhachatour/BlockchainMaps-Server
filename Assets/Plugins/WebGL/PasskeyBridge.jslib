@@ -137,5 +137,74 @@ mergeInto(LibraryManager.library, {
             console.error('Status check error:', error);
             return null;
         }
+    },
+
+    // Initialize Soroban SDK
+    InitializeSoroban: function() {
+        try {
+            if (!window.passkeyKit) {
+                throw new Error('PasskeyKit must be initialized first');
+            }
+
+            // Initialize Soroban SDK with your configuration
+            window.sorobanKit = new SorobanKit({
+                server: window.passkeyKit.rpcUrl,
+                networkPassphrase: window.passkeyKit.networkPassphrase,
+            });
+
+            console.log('[SorobanBridge] Initialized successfully');
+            SendMessage('SorobanManager', 'HandleSorobanInitialized', 'true');
+        } catch (error) {
+            console.error('[SorobanBridge] Initialization error:', error);
+            SendMessage('SorobanManager', 'HandleSorobanError', error.toString());
+        }
+    },
+
+    // Execute Smart Contract Method
+    ExecuteContractMethod: function(paramsPtr) {
+        try {
+            const params = JSON.parse(UTF8ToString(paramsPtr));
+            const { contractId, method, args } = params;
+
+            if (!window.sorobanKit) {
+                throw new Error('SorobanKit not initialized');
+            }
+
+            console.log(`[SorobanBridge] Executing contract ${contractId}.${method}`);
+            
+            window.sorobanKit.contract(contractId)
+                .call(method, args)
+                .then(result => {
+                    SendMessage('SorobanManager', 'HandleContractResponse', JSON.stringify(result));
+                })
+                .catch(error => {
+                    SendMessage('SorobanManager', 'HandleSorobanError', error.toString());
+                });
+        } catch (error) {
+            console.error('[SorobanBridge] Contract execution error:', error);
+            SendMessage('SorobanManager', 'HandleSorobanError', error.toString());
+        }
+    },
+
+    // Query Contract State
+    GetContractState: function(contractIdPtr) {
+        try {
+            const contractId = UTF8ToString(contractIdPtr);
+
+            if (!window.sorobanKit) {
+                throw new Error('SorobanKit not initialized');
+            }
+
+            window.sorobanKit.getContractState(contractId)
+                .then(state => {
+                    SendMessage('SorobanManager', 'HandleContractState', JSON.stringify(state));
+                })
+                .catch(error => {
+                    SendMessage('SorobanManager', 'HandleSorobanError', error.toString());
+                });
+        } catch (error) {
+            console.error('[SorobanBridge] State query error:', error);
+            SendMessage('SorobanManager', 'HandleSorobanError', error.toString());
+        }
     }
 }); 

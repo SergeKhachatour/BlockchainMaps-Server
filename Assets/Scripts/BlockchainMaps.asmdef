@@ -8,7 +8,9 @@
         "GUID:75469ad4d38634e559750d17036d5f7c",
         "CurvedUI",
         "Newtonsoft.Json",
-        "InfinityCode.OnlineMaps"
+        "InfinityCode.OnlineMaps",
+        "BlockchainMaps.Authentication",
+        "BlockchainMaps.Soroban"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

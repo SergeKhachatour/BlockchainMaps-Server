@@ -1300,6 +1300,10 @@
       <Project>{6DCF53A5-C492-52B8-2E70-AACC7985DFDA}</Project>
       <Name>EncryptionTransportEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="BlockchainMaps.Authentication.csproj">
+      <Project>{237048EC-2A61-3C9E-C783-421795ED4066}</Project>
+      <Name>BlockchainMaps.Authentication</Name>
+    </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{9116DFCE-1A1C-E21E-A4AF-45CE837D8F99}</Project>
       <Name>Mirror.CompilerSymbols</Name>
@@ -1311,6 +1315,10 @@
     <ProjectReference Include="Mirror.Editor.csproj">
       <Project>{E5D6EBC5-0F9B-BD6A-76E5-F3652586D47A}</Project>
       <Name>Mirror.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="BlockchainMaps.Editor.csproj">
+      <Project>{3CECA320-16B3-A6FA-9DBB-2D6B1C433C54}</Project>
+      <Name>BlockchainMaps.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="InfinityCode.OnlineMaps.Editor.csproj">
       <Project>{7D529260-3387-73A1-2B47-32015B8EE703}</Project>
@@ -1347,6 +1355,10 @@
     <ProjectReference Include="Mirror.Transports.csproj">
       <Project>{3C5BC3C3-FFF5-8222-B460-D3D6303A2668}</Project>
       <Name>Mirror.Transports</Name>
+    </ProjectReference>
+    <ProjectReference Include="BlockchainMaps.Soroban.csproj">
+      <Project>{3E1E5BC0-372B-6B34-CE4F-26256BB32DC9}</Project>
+      <Name>BlockchainMaps.Soroban</Name>
     </ProjectReference>
     <ProjectReference Include="BlockchainMaps.csproj">
       <Project>{7151988D-D85E-8FFC-889B-10C6102A2FF6}</Project>

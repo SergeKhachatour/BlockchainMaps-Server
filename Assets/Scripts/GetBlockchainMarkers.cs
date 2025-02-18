@@ -17,10 +17,15 @@ using System.Threading;
 using System.Reflection;
 using System.Net.Http;
 using System.Net;
+using BlockchainMaps.Authentication;
+using BlockchainMaps.Soroban;
+
+#if !UNITY_WEBGL
 using StellarDotnetSdk;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Requests;
-using BlockchainMaps.Authentication;
+using System.Web;
+#endif
 
 #if !UNITY_EDITOR && UNITY_WEBGL
 using System.Runtime.InteropServices;
@@ -37,6 +42,9 @@ namespace BlockchainMaps.Authentication
     {
         private static bool isInitialized = false;
         private PasskeyUIManager passkeyUIManager;
+        
+        [Header("Configuration")]
+        [SerializeField] private SorobanConfig sorobanConfig;
         
         void Awake()
         {
@@ -305,28 +313,30 @@ namespace BlockchainMaps.Authentication
         private void LoadStellarSDK()
         {
             #if !UNITY_EDITOR && UNITY_WEBGL
-            // Skip SDK loading in WebGL builds
-            Debug.Log("Skipping Stellar SDK load in WebGL build");
-            return;
+            Debug.Log("Loading Stellar SDK for WebGL...");
+            // WebGL implementation uses the JavaScript bridge
+            InitializeWebGL();
             #else
+            Debug.Log("Loading Stellar SDK for standalone...");
             try
             {
-                var dllPath = System.IO.Path.Combine(Application.dataPath, "Plugins", "StellarSDK", "stellar-dotnet-sdk.dll");
-                Debug.Log($"Looking for Stellar SDK DLL at: {dllPath}");
-                
-                if (!System.IO.File.Exists(dllPath))
+                // Initialize Stellar SDK for standalone builds
+                if (stellarConfig != null)
                 {
-                    Debug.LogError("Stellar SDK DLL file not found!");
-                    return;
+                    #if !UNITY_WEBGL
+                    var server = new StellarDotnetSdk.Server(stellarConfig.rpcUrl);
+                    StellarDotnetSdk.Network.UseTestNetwork();
+                    #endif
+                    Debug.Log("Stellar SDK initialized successfully");
                 }
-                
-                var assembly = Assembly.LoadFrom(dllPath);
-                Debug.Log($"Stellar SDK Assembly loaded: {assembly.FullName}");
+                else
+                {
+                    Debug.LogWarning("StellarConfig not assigned!");
+                }
             }
             catch (Exception e)
             {
-                Debug.LogError($"Error loading Stellar SDK: {e.Message}");
-                Debug.LogError($"Stack trace: {e.StackTrace}");
+                Debug.LogError($"Error initializing Stellar SDK: {e.Message}");
             }
             #endif
         }
@@ -1081,56 +1091,38 @@ namespace BlockchainMaps.Authentication
                     throw new InvalidOperationException("PasskeyManager not found in scene");
                 }
 
-                // Check if user is authenticated
-                if (!passkeyManager.IsAuthenticated())
+                // Get Soroban manager
+                var sorobanManager = SorobanManager.Instance;
+                if (sorobanManager == null)
                 {
-                    Debug.Log("User not authenticated, showing authentication UI...");
-                    if (passkeyUIManager != null)
-                    {
-                        passkeyUIManager.Show();
-                        // Wait for authentication
-                        while (!passkeyManager.IsAuthenticated())
-                        {
-                            await Task.Delay(100);
-                            // Add timeout logic if needed
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning("PasskeyUIManager not found, attempting direct authentication...");
-                        bool success = await passkeyManager.Authenticate("user");
-                        if (!success)
-                        {
-                            return new StellarTransactionResult 
-                            { 
-                                Success = false, 
-                                ErrorMessage = "Please authenticate first" 
-                            };
-                        }
-                    }
+                    throw new InvalidOperationException("SorobanManager not found");
                 }
 
-                // Sign the transaction
-                string signedTx = await passkeyManager.SignTransaction(uri);
+                // Parse URI parameters
+                var uriParams = ParseStellarUri(uri);
                 
-                // Hide the UI after successful transaction
-                if (passkeyUIManager != null)
-                {
-                    passkeyUIManager.Hide();
-                }
-                
-                return new StellarTransactionResult
-                {
-                    Success = signedTx != null,
-                    TransactionHash = signedTx ?? "Transaction signing failed",
-                    ErrorMessage = signedTx == null ? "Failed to sign transaction" : null
-                };
+                // Execute payment through Soroban contract
+                var response = await sorobanManager.ExecuteContract(
+                    sorobanConfig.tokenContractId,
+                    "transfer",
+                    new object[] {
+                        uriParams.destination,
+                        uriParams.amount
+                    }
+                );
+
+                // Parse response
+                var result = JsonUtility.FromJson<StellarTransactionResult>(response);
+                return result;
                 #else
-                // Default response for non-WebGL builds
+                // Simulate transaction in editor
+                await Task.Delay(100);
                 return new StellarTransactionResult
                 {
-                    Success = false,
-                    ErrorMessage = "PassKey Kit is only available in WebGL builds"
+                    Success = true,
+                    TransactionHash = "simulated_hash",
+                    ErrorMessage = null,
+                    OperationErrors = null
                 };
                 #endif
             }
@@ -1138,11 +1130,63 @@ namespace BlockchainMaps.Authentication
             {
                 Debug.LogError($"Error processing Stellar URI: {e.Message}");
                 Debug.LogError($"Stack trace: {e.StackTrace}");
-                return new StellarTransactionResult 
-                { 
-                    Success = false, 
-                    ErrorMessage = $"Unexpected error: {e.Message}" 
+                return new StellarTransactionResult
+                {
+                    Success = false,
+                    ErrorMessage = e.Message,
+                    OperationErrors = new List<string> { e.StackTrace }
                 };
+            }
+        }
+
+        private class StellarUriParams
+        {
+            public string destination;
+            public decimal amount;
+            public string memo;
+        }
+
+        private StellarUriParams ParseStellarUri(string uri)
+        {
+            try
+            {
+                // Remove prefix
+                string query = uri.Substring(STELLAR_URI_PREFIX.Length);
+                
+                #if !UNITY_WEBGL
+                // Parse query parameters using System.Web.HttpUtility
+                var parameters = System.Web.HttpUtility.ParseQueryString(query);
+                return new StellarUriParams
+                {
+                    destination = parameters["destination"],
+                    amount = decimal.Parse(parameters["amount"] ?? "0"),
+                    memo = parameters["memo"] ?? DEFAULT_MEMO
+                };
+                #else
+                // Manual parsing for WebGL builds
+                var parameters = new Dictionary<string, string>();
+                string[] pairs = query.Split('&');
+                foreach (string pair in pairs)
+                {
+                    string[] keyValue = pair.Split('=');
+                    if (keyValue.Length == 2)
+                    {
+                        parameters[keyValue[0]] = UnityWebRequest.UnEscapeURL(keyValue[1]);
+                    }
+                }
+                
+                return new StellarUriParams
+                {
+                    destination = parameters.ContainsKey("destination") ? parameters["destination"] : null,
+                    amount = parameters.ContainsKey("amount") ? decimal.Parse(parameters["amount"]) : 0,
+                    memo = parameters.ContainsKey("memo") ? parameters["memo"] : DEFAULT_MEMO
+                };
+                #endif
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error parsing Stellar URI: {e.Message}");
+                throw;
             }
         }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using BlockchainMaps.Soroban;
 
 namespace BlockchainMaps.Authentication
 {
@@ -15,9 +16,33 @@ namespace BlockchainMaps.Authentication
         public bool allowSecurityKeys = true;
         public float sessionTimeout = 3600f; // 1 hour in seconds
 
+        [Header("Soroban Integration")]
+        [SerializeField] private SorobanConfig sorobanConfig;
+
         public string GetConfigJson()
         {
-            return JsonUtility.ToJson(this);
+            var config = new
+            {
+                rpcUrl = sorobanConfig != null ? sorobanConfig.rpcUrl : this.rpcUrl,
+                networkPassphrase = sorobanConfig != null ? sorobanConfig.networkPassphrase : this.networkPassphrase,
+                factoryContractId = sorobanConfig != null ? sorobanConfig.markerFactoryContractId : this.factoryContractId,
+                requireBiometrics = this.requireBiometrics,
+                allowSecurityKeys = this.allowSecurityKeys,
+                sessionTimeout = this.sessionTimeout
+            };
+
+            return JsonUtility.ToJson(config);
+        }
+
+        private void OnValidate()
+        {
+            if (sorobanConfig != null)
+            {
+                // Sync values with SorobanConfig
+                rpcUrl = sorobanConfig.rpcUrl;
+                networkPassphrase = sorobanConfig.networkPassphrase;
+                factoryContractId = sorobanConfig.markerFactoryContractId;
+            }
         }
     }
 } 
