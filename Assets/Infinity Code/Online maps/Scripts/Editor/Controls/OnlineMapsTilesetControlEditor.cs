@@ -11,6 +11,7 @@ public class OnlineMapsTilesetControlEditor : OnlineMapsControlBaseDynamicMeshEd
     private SerializedProperty colliderType;
     private SerializedProperty compressTextures;
     private Shader defaultTilesetShader;
+    private Shader defaultTilesetShader2;
     private SerializedProperty drawingShader;
     private SerializedProperty elevationResolution;
     private SerializedProperty markerMaterial;
@@ -22,9 +23,6 @@ public class OnlineMapsTilesetControlEditor : OnlineMapsControlBaseDynamicMeshEd
     private SerializedProperty tileMaterial;
     private SerializedProperty tilesetShader;
 
-#if UNITY_2019_1_OR_NEWER
-    private Shader defaultTilesetShader2;
-#endif
 
     protected override void CacheSerializedFields()
     {
@@ -83,8 +81,12 @@ public class OnlineMapsTilesetControlEditor : OnlineMapsControlBaseDynamicMeshEd
     {
         if (EditorApplication.isPlaying) return;
 
-#if UNITY_2019_1_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
         if (UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline == null) return;
+#else
+        if (UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset == null) return;
+#endif
+        
         bool wrongTileset = tilesetShader.objectReferenceValue == defaultTilesetShader || tilesetShader.objectReferenceValue == defaultTilesetShader2;
         bool wrongMarker = markerShader.objectReferenceValue != null && (markerShader.objectReferenceValue as Shader).name == "Legacy Shaders/Transparent/Diffuse";
         bool wrongDrawing = drawingShader.objectReferenceValue != null && (drawingShader.objectReferenceValue as Shader).name == "Infinity Code/Online Maps/Tileset DrawingElement";
@@ -114,7 +116,6 @@ public class OnlineMapsTilesetControlEditor : OnlineMapsControlBaseDynamicMeshEd
         }
 
         EditorGUILayout.EndVertical();
-#endif
     }
 
     private void DrawElevationResolution()
@@ -196,9 +197,7 @@ public class OnlineMapsTilesetControlEditor : OnlineMapsControlBaseDynamicMeshEd
         base.OnEnableLate();
 
         defaultTilesetShader = Shader.Find("Infinity Code/Online Maps/Tileset Cutout");
-#if UNITY_2019_1_OR_NEWER
         defaultTilesetShader2 = Shader.Find("Infinity Code/Online Maps/Tileset");
-#endif
 
         if (tilesetShader.objectReferenceValue == null) tilesetShader.objectReferenceValue = defaultTilesetShader;
         if (markerShader.objectReferenceValue == null) markerShader.objectReferenceValue = Shader.Find("Transparent/Diffuse");

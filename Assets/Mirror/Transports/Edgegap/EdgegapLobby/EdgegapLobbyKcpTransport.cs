@@ -3,7 +3,6 @@ using System.Collections;
 using System.Threading;
 using Mirror;
 using UnityEngine;
-using Mirror.Transports.Edgegap.EdgegapRelay;
 using Random = UnityEngine.Random;
 namespace Edgegap
 {
@@ -46,10 +45,11 @@ namespace Edgegap
                     {
                         switch (((EdgegapKcpServer)this.server).state)
                         {
-                            case Mirror.Transports.Edgegap.EdgegapRelay.ConnectionState.Connected:
+                            case ConnectionState.Valid:
                                 return TransportStatus.Connected;
-                            case Mirror.Transports.Edgegap.EdgegapRelay.ConnectionState.Disconnected:
-                            case Mirror.Transports.Edgegap.EdgegapRelay.ConnectionState.Checking:
+                            case ConnectionState.Invalid:
+                            case ConnectionState.SessionTimeout:
+                            case ConnectionState.Error:
                                 return TransportStatus.Error;
                         }
                     }

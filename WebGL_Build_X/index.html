@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <!-- Polyfill for require and exports functions to prevent JavaScript errors -->
+    <script>
+      if (typeof require === 'undefined') {
+        window.require = function() {
+          console.warn('require() called but not implemented - this is expected for WebGL builds');
+          return {};
+        };
+      }
+      if (typeof exports === 'undefined') {
+        window.exports = {};
+      }
+    </script>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: https://ssl.gstatic.com https://*.googleapis.com https://*.gstatic.com https://*.google.com https://khm0.googleapis.com https://khm1.googleapis.com blob: *; img-src * 'self' data: https: http:; connect-src * 'self' https: ws: wss:;">
+    <title>BlockchainMaps Server</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    
+    <!-- Load dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@stellar/stellar-sdk/dist/stellar-sdk.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/buffer@6.0.3/index.min.js"></script>
+    
+    <!-- Load Official PasskeyKit -->
+    <script src="passkey-kit-official.bundle.js"></script>
+    
+    <script>
+      // Global error handler to catch JavaScript errors
+      window.addEventListener('error', function(event) {
+        console.error('Global JavaScript error:', event.error);
+        console.error('Error details:', {
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          error: event.error
+        });
+      });
+
+      // Handle unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        console.error('Unhandled promise rejection:', event.reason);
+      });
+
+      // Initialize PasskeyKit global object
+      window.STELLAR_CONFIG = {
+        rpcUrl: "https://soroban-testnet.stellar.org",
+        networkPassphrase: "Test SDF Network ; September 2015",
+        walletWasmHash: "default_hash"
+      };
+
+      // Create a global PasskeyKit instance using the official library
+      window.initializePasskeyKit = async function() {
+        try {
+            if (typeof PasskeyKit === 'undefined') {
+                throw new Error('Official PasskeyKit not loaded');
+            }
+            
+            if (!window.passkeyKit) {
+                // Use the official PasskeyKit constructor with minimal config
+                window.passkeyKit = new PasskeyKit(window.STELLAR_CONFIG);
+                
+                console.log('Official PasskeyKit initialized successfully');
+            }
+        } catch (error) {
+            console.error('Error initializing Official PasskeyKit:', error);
+            throw error;
+        }
+      };
+
+      // Initialize PasskeyKit when the document is ready
+      document.addEventListener('DOMContentLoaded', () => {
+        window.initializePasskeyKit().catch(error => {
+          console.error('Failed to initialize Official PasskeyKit:', error);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-footer">
+        <div id="unity-build-title">BlockchainMaps Server</div>
+        <div id="unity-fullscreen-button"></div>
+      </div>
+    </div>
+    <script>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/23e168acc3f61631776cdb028054a8ce.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/59e0fd533cf4d8d33bb2752148dd6b07.data.unityweb",
+        frameworkUrl: buildUrl + "/7336a6c4b0866afcf48cdb7b3a320958.framework.js.unityweb",
+        codeUrl: buildUrl + "/0aaa72500d552ba32274a4a7105b07bc.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "SDF - Stellar Development Foundation",
+        productName: "BlockchainMaps Server",
+        productVersion: "0.1",
+        matchWebGLToCanvasSize: true,
+        devicePixelRatio: window.devicePixelRatio || 1,
+        maxRenderBufferSize: 4096,
+        powerPreference: "high-performance",
+        TOTAL_STACK: 5 * 1024 * 1024,
+        cachingEnabled: true,
+        preserveDrawingBuffer: false,
+        antialias: true,
+        alpha: true,
+        premultipliedAlpha: false
+      };
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+      }
+
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }, {
+          powerPreference: "high-performance",
+          preserveDrawingBuffer: true,
+          antialias: false,
+          alpha: true,
+          premultipliedAlpha: false
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html> 

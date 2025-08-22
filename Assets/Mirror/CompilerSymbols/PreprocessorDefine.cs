@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 
@@ -6,84 +5,40 @@ namespace Mirror
 {
     static class PreprocessorDefine
     {
-        static BuildTargetGroup GetCurrentBuildTargetGroup()
-        {
-            // Default to Standalone if we can't determine the platform
-            if (!Enum.IsDefined(typeof(BuildTargetGroup), EditorUserBuildSettings.selectedBuildTargetGroup))
-                return BuildTargetGroup.Standalone;
-
-            return EditorUserBuildSettings.selectedBuildTargetGroup;
-        }
-
         /// <summary>
         /// Add define symbols as soon as Unity gets done compiling.
         /// </summary>
         [InitializeOnLoadMethod]
         public static void AddDefineSymbols()
         {
-            try
+#if UNITY_2021_2_OR_NEWER
+            string currentDefines = PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup));
+#else
+            // Deprecated in Unity 2023.1
+            string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+#endif
+            // Remove oldest when adding next month's symbol.
+            // Keep a rolling 12 months of symbols.
+            HashSet<string> defines = new HashSet<string>(currentDefines.Split(';'))
             {
-                var buildTargetGroup = GetCurrentBuildTargetGroup();
-                string currentDefines;
+                "MIRROR",
+                "MIRROR_89_OR_NEWER",
+                "MIRROR_90_OR_NEWER",
+                "MIRROR_93_OR_NEWER",
+                "MIRROR_96_OR_NEWER"
+            };
 
-                try
-                {
-                    #if UNITY_2021_2_OR_NEWER
-                    currentDefines = PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup));
-                    #else
-                    currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-                    #endif
-                }
-                catch (Exception e)
-                {
-                    UnityEngine.Debug.LogError($"[Mirror] Error getting current define symbols: {e.Message}");
-                    currentDefines = "";
-                }
-
-                // Remove oldest when adding next month's symbol.
-                // Keep a rolling 12 months of symbols.
-                HashSet<string> defines = new HashSet<string>(
-                    string.IsNullOrEmpty(currentDefines) 
-                        ? new string[0] 
-                        : currentDefines.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                )
-                {
-                    "MIRROR",
-                    "MIRROR_81_OR_NEWER",
-                    "MIRROR_82_OR_NEWER",
-                    "MIRROR_83_OR_NEWER",
-                    "MIRROR_84_OR_NEWER",
-                    "MIRROR_85_OR_NEWER",
-                    "MIRROR_86_OR_NEWER",
-                    "MIRROR_89_OR_NEWER",
-                    "MIRROR_90_OR_NEWER",
-                    "MIRROR_93_OR_NEWER"
-                };
-
-                // only touch PlayerSettings if we actually modified it,
-                // otherwise it shows up as changed in git each time.
-                string newDefines = string.Join(";", defines);
-                if (newDefines != currentDefines)
-                {
-                    try
-                    {
-                        #if UNITY_2021_2_OR_NEWER
-                        PlayerSettings.SetScriptingDefineSymbols(
-                            UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup), 
-                            newDefines);
-                        #else
-                        PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, newDefines);
-                        #endif
-                    }
-                    catch (Exception e)
-                    {
-                        UnityEngine.Debug.LogError($"[Mirror] Error setting define symbols: {e.Message}");
-                    }
-                }
-            }
-            catch (Exception e)
+            // only touch PlayerSettings if we actually modified it,
+            // otherwise it shows up as changed in git each time.
+            string newDefines = string.Join(";", defines);
+            if (newDefines != currentDefines)
             {
-                UnityEngine.Debug.LogError($"[Mirror] Error in AddDefineSymbols: {e.Message}");
+#if UNITY_2021_2_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), newDefines);
+#else
+                // Deprecated in Unity 2023.1
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, newDefines);
+#endif
             }
         }
     }

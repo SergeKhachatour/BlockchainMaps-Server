@@ -542,7 +542,7 @@ public abstract class OnlineMapsDrawingElement: IOnlineMapsInteractiveElement
         if (color.a == 0) return;
 
         int izoom = (int) zoom;
-        float zoomScale = 1 - (zoom - izoom) / 2;
+        float zoomScale = Mathf.Pow(2, izoom - zoom);
 
         double sx, sy;
         manager.map.projection.CoordinatesToTile(0, 0, izoom, out sx, out sy);
@@ -942,7 +942,7 @@ public abstract class OnlineMapsDrawingElement: IOnlineMapsInteractiveElement
     private double[] GetBufferPoints(Vector2 bufferPosition, float zoom, IEnumerable points, out double minX, out double maxX, out double minY, out double maxY)
     {
         int izoom = (int) zoom;
-        float zoomScale = 1 - (zoom - izoom) / 2;
+        float zoomScale = Mathf.Pow(2, izoom - zoom);
         float scaledTileSize = OnlineMapsUtils.tileSize / zoomScale;
 
         double[] bufferPoints = null;

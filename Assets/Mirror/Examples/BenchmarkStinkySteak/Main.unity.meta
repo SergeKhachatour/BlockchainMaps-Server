@@ -1,7 +1,14 @@
 fileFormatVersion: 2
-guid: 99dc29c64584c7740b86cb3f24385ef2
+guid: 5b4634c069bbde74c82d459a4fdc6079
 DefaultImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Main.unity
+  uploadId: 736421

@@ -4,7 +4,7 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(OnlineMapsLocationService))]
+[CustomEditor(typeof(OnlineMapsLocationService), true)]
 public class OnlineMapsLocationServiceEditor : OnlineMapsLocationServiceEditorBase
 {
     private SerializedProperty desiredAccuracy;

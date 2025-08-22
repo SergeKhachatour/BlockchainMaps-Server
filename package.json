@@ -1,26 +1,45 @@
 {
-  "dependencies": {
-    "@stellar/stellar-sdk": "^13.1.0",
-    "passkey-kit": "^0.10.10"
-  },
-  "name": "blockchainmaps-server",
-  "description": "A Unity-based visualization tool that combines blockchain data with interactive 3D mapping and curved UI interfaces.",
+  "name": "blockchain-maps-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Backend servers for Unity Blockchain Maps project",
+  "main": "stellar-backend-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:stellar": "node stellar-backend-server.js",
+    "start:marker": "node marker-backend-server.js",
+    "start": "concurrently \"npm run start:stellar\" \"npm run start:marker\"",
+    "dev:stellar": "nodemon stellar-backend-server.js",
+    "dev:marker": "nodemon marker-backend-server.js",
+    "dev": "concurrently \"npm run dev:stellar\" \"npm run dev:marker\"",
+    "install:stellar": "npm install stellar-sdk",
+    "install:marker": "npm install express cors",
+    "install:all": "npm install express cors stellar-sdk concurrently nodemon"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.1",
-    "stream-browserify": "^3.0.0",
-    "ts-loader": "^9.5.2",
-    "typescript": "^5.7.3",
-    "util": "^0.12.5",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^6.0.1"
-  }
+  "keywords": [
+    "stellar",
+    "blockchain",
+    "unity",
+    "webgl",
+    "maps",
+    "api"
+  ],
+  "author": "Blockchain Maps Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "stellar-sdk": "^11.0.0",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-repo/blockchain-maps-backend"
+  },
+  "bugs": {
+    "url": "https://github.com/your-repo/blockchain-maps-backend/issues"
+  },
+  "homepage": "https://github.com/your-repo/blockchain-maps-backend#readme"
 }

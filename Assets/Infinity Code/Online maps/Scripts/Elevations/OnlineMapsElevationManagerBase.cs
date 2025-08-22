@@ -114,7 +114,7 @@ public abstract class OnlineMapsElevationManagerBase : MonoBehaviour
     {
         get
         {
-            if (_map == null) _map = GetComponent<OnlineMaps>();
+            if (!_map) _map = GetComponent<OnlineMaps>();
             return _map;
         }
     }

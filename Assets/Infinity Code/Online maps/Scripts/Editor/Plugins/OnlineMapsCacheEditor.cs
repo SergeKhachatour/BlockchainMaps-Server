@@ -208,7 +208,7 @@ public class OnlineMapsCacheEditor:OnlineMapsFormattedEditor
         LayoutItem lFileCache = rootLayoutItem.Create(pUseFileCache);
         lFileCache.drawGroup = LayoutItem.Group.valueOn;
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_2020_2_OR_NEWER
         lFileCache.Create("webGLWarning", DrawWebGLWarning);
 #endif
         lFileCache.Create("checkCacheSize", CheckFileCacheSize);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CurvedUI;
 using TMPro;
 using BlockchainMaps.Authentication;
+using BlockchainMaps;
 
 public class BaseMarkerUI : MonoBehaviour
 {

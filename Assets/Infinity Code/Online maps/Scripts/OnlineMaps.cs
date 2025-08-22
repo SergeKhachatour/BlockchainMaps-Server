@@ -27,7 +27,7 @@ public class OnlineMaps : MonoBehaviour, ISerializationCallbackReceiver, IOnline
     /// <summary>
     /// The current version of Online Maps
     /// </summary>
-    public const string version = "3.9.4.1";
+    public const string version = "3.9.5.1";
 
     /// <summary>
     /// The minimum zoom level
@@ -633,7 +633,7 @@ public class OnlineMaps : MonoBehaviour, ISerializationCallbackReceiver, IOnline
     /// </summary>
     public float zoomFactor
     {
-        get { return 1 - zoomScale / 2; }
+        get { return Mathf.Pow(2, -zoomScale); } 
     }
     
     [Obsolete("Use zoomFactor instead.")]
@@ -1358,10 +1358,11 @@ public class OnlineMaps : MonoBehaviour, ISerializationCallbackReceiver, IOnline
     }
 
     /// <summary>
-    /// Set the the map coordinate.
+    /// Set the map coordinate.
     /// </summary>
     /// <param name="lng">Longitude</param>
     /// <param name="lat">Latitude</param>
+    /// <param name="ignoreSamePosition">If true, the map will be redrawn only if the position has changed.</param>
     public void SetPosition(double lng, double lat, bool ignoreSamePosition = true)
     {
         if (ignoreSamePosition && Math.Abs(latitude - lat) < double.Epsilon && Math.Abs(longitude - lng) < double.Epsilon) return;

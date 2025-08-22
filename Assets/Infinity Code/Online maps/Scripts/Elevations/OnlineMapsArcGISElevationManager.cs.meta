@@ -9,3 +9,10 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 138509
+  packageName: Online Maps v3
+  packageVersion: 3.9.5
+  assetPath: Assets/Infinity Code/Online maps/Scripts/Elevations/OnlineMapsArcGISElevationManager.cs
+  uploadId: 706024

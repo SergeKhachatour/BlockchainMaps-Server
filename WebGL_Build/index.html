@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+    <!-- Polyfill for require and exports functions to prevent JavaScript errors -->
+    <script>
+      if (typeof require === 'undefined') {
+        window.require = function() {
+          console.warn('require() called but not implemented - this is expected for WebGL builds');
+          return {};
+        };
+      }
+      if (typeof exports === 'undefined') {
+        window.exports = {};
+      }
+    </script>
+    
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -13,31 +26,49 @@
     <script src="https://cdn.jsdelivr.net/npm/@stellar/stellar-sdk/dist/stellar-sdk.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/buffer@6.0.3/index.min.js"></script>
     
-    <!-- Load PasskeyKit -->
-    <script src="passkey-kit-bundle.js"></script>
+    <!-- Load Official PasskeyKit -->
+    <script src="passkey-kit-official.bundle.js"></script>
     
     <script>
+      // Global error handler to catch JavaScript errors
+      window.addEventListener('error', function(event) {
+        console.error('Global JavaScript error:', event.error);
+        console.error('Error details:', {
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          error: event.error
+        });
+      });
+
+      // Handle unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        console.error('Unhandled promise rejection:', event.reason);
+      });
+
       // Initialize PasskeyKit global object
       window.STELLAR_CONFIG = {
         rpcUrl: "https://soroban-testnet.stellar.org",
         networkPassphrase: "Test SDF Network ; September 2015",
-        factoryContractId: "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+        walletWasmHash: "default_hash"
       };
 
-      // Create a global PasskeyKit instance
+      // Create a global PasskeyKit instance using the official library
       window.initializePasskeyKit = async function() {
         try {
             if (typeof PasskeyKit === 'undefined') {
-                throw new Error('PasskeyKit not loaded');
+                throw new Error('Official PasskeyKit not loaded');
             }
             
             if (!window.passkeyKit) {
+                // Use the official PasskeyKit constructor with minimal config
                 window.passkeyKit = new PasskeyKit(window.STELLAR_CONFIG);
-                await window.passkeyKit.initialize();
-                console.log('PasskeyKit initialized successfully');
+                
+                console.log('Official PasskeyKit initialized successfully');
             }
         } catch (error) {
-            console.error('Error initializing PasskeyKit:', error);
+            console.error('Error initializing Official PasskeyKit:', error);
             throw error;
         }
       };
@@ -45,7 +76,7 @@
       // Initialize PasskeyKit when the document is ready
       document.addEventListener('DOMContentLoaded', () => {
         window.initializePasskeyKit().catch(error => {
-          console.error('Failed to initialize PasskeyKit:', error);
+          console.error('Failed to initialize Official PasskeyKit:', error);
         });
       });
     </script>
@@ -66,13 +97,13 @@
     </div>
     <script>
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebGL_Build.loader.js";
+      var loaderUrl = buildUrl + "/bad4b8f5a0bf9492a80b5ded6ab0592d.loader.js";
       var config = {
-        dataUrl: buildUrl + "/WebGL_Build.data.unityweb",
-        frameworkUrl: buildUrl + "/WebGL_Build.framework.js.unityweb",
-        codeUrl: buildUrl + "/WebGL_Build.wasm.unityweb",
+        dataUrl: buildUrl + "/e7c8685c7f030bdd0085667c27c60893.data.unityweb",
+        frameworkUrl: buildUrl + "/10aff04c218fbc609a077e01bd0f0bbf.framework.js.unityweb",
+        codeUrl: buildUrl + "/ff9cc0c0d3280429a244ec8bcd488194.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
+        companyName: "SDF - Stellar Development Foundation",
         productName: "BlockchainMaps Server",
         productVersion: "0.1",
         matchWebGLToCanvasSize: true,
@@ -123,18 +154,6 @@
         });
       };
       document.body.appendChild(script);
-
-      // Handle AudioContext resume
-      document.addEventListener('click', function() {
-        if (typeof unityInstance !== 'undefined') {
-          if (unityInstance.Module.AudioContext) {
-            unityInstance.Module.AudioContext.resume();
-          }
-          if (unityInstance.Module.audioContext) {
-            unityInstance.Module.audioContext.resume();
-          }
-        }
-      }, { once: true });
     </script>
   </body>
 </html> 

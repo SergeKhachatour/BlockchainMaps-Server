@@ -337,6 +337,7 @@ MonoBehaviour:
   zoomInOnDoubleClick: 1
   zoomMode: 0
   zoomSensitivity: 1
+  zoomSpeed: 1
   activeCamera: {fileID: 0}
   elevationManager: {fileID: 0}
   marker2DMode: 0
@@ -402,7 +403,7 @@ MonoBehaviour:
   useProxy: 1
   useSoftwareJPEGDecoder: 0
   width: 1024
-  _activeTypeSettings: 09Anonymous273106App ID223220xWVIueSv6JL0aJ5xqTxb08App Code225222djPZyynKsbTjIUDOBcHZ2g
+  _activeTypeSettings: 07Api Key11006App ID11008App Code110
   _zoom: 3
   latitude: 0
   longitude: 0
@@ -449,7 +450,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 193630188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed3c476c58b6b054d9469cbe6c8fa060, type: 3}
+  m_Script: {fileID: 11500000, guid: 41561b278b13936488e1d96def75b3c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   customCacheUnloadRate: 0.3

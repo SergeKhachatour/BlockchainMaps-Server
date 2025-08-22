@@ -26,6 +26,7 @@ namespace BlockchainMaps.Editor
             // Set default values
             config.rpcUrl = "https://soroban-testnet.stellar.org";
             config.networkPassphrase = "Test SDF Network ; September 2015";
+            config.markerFactoryContractId = "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
             config.defaultGasLimit = 100000;
             config.defaultBaseFee = 100;
 

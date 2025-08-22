@@ -19,6 +19,10 @@ namespace InfinityCode.OnlineMapsDemos
         public AnimationCurve altitudeZoomCurve = AnimationCurve.Linear(0, 19, 1, 13);
         public float maxAltitude = 4000; // meters
 
+        public float minSpeed = 100; // km/h
+        public float maxSpeed = 2000; // km/h
+        public float speedChangeRate = 100; // km/h per second
+
         private double px, py;
         public float tilt = 0;
 
@@ -27,10 +31,6 @@ namespace InfinityCode.OnlineMapsDemos
         private OnlineMaps map;
         private OnlineMapsElevationManagerBase elevationManager;
         private OnlineMapsTileSetControl control;
-
-        public float minSpeed = 100; // km/h
-        public float maxSpeed = 2000; // km/h
-        public float speedChangeRate = 100; // km/h per second
 
         private void Start()
         {

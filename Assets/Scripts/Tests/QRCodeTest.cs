@@ -55,16 +55,22 @@ public class QRCodeTest : MonoBehaviour
             mainCamera.transform.Rotate(Vector3.left * mouseY, Space.Self);
         }
 
-        // Scanning update
-        if (isScanning && qrManager != null)
-        {
-            qrManager.ScanQRCode(mainCamera, mainCamera.transform.position);
-        }
+        // Scanning update - disabled auto-scanning
+        // if (isScanning && qrManager != null)
+        // {
+        //     qrManager.ScanQRCode(mainCamera, mainCamera.transform.position);
+        // }
 
         // Toggle scanning with Space key
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ToggleScanning();
+        }
+        
+        // Manual scan with F key (for testing)
+        if (Input.GetKeyDown(KeyCode.F) && isScanning && qrManager != null)
+        {
+            qrManager.ScanQRCode(mainCamera, mainCamera.transform.position);
         }
     }
 
@@ -72,11 +78,11 @@ public class QRCodeTest : MonoBehaviour
     {
         try
         {
-            string testData = "Test QR Code Data|web+stellar:pay?destination=test&amount=100";
+            string testData = "web+stellar:pay?destination=test&amount=100";
             Debug.Log("Generating test QR code...");
             
-            // Test QR code generation
-            Texture2D qrTexture = qrManager.GenerateQRCode("TestPublicKey", testData);
+            // Test QR code generation using QRCodeWrapper directly
+            Texture2D qrTexture = QRCodeWrapper.GenerateQRCode(testData);
             
             if (qrTexture != null)
             {

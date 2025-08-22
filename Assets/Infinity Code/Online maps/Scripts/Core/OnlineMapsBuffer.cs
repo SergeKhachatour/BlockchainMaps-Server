@@ -777,7 +777,7 @@ public class OnlineMapsBuffer
                 _floatZoom = value;
                 zoom = (int) value;
                 zoomScale = _floatZoom - zoom;
-                zoomFactor = 1 - zoomScale / 2;
+                zoomFactor = Mathf.Pow(2,-zoomScale);
             }
         }
 

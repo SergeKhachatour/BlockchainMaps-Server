@@ -72,6 +72,21 @@ public class OnlineMapsRawImageTouchForwarder : MonoBehaviour
         return hits[0].gameObject;
     }
 
+    private int GetTouchCountFromForwarder()
+    {
+        if (target != image.gameObject) return 0;
+
+#if UNITY_EDITOR
+        return OnlineMapsInput.GetMouseButton(0) ? 1 : 0;
+#else
+        if (OnlineMapsInput.touchSupported)
+        {
+            if (OnlineMapsInput.touchCount > 0) return OnlineMapsInput.touchCount;
+        }
+        return OnlineMapsInput.GetMouseButton(0) ? 1 : 0;
+#endif
+    }
+
     public Vector2 MapToForwarderSpace(Vector2 position)
     {
         RectTransform t = image.rectTransform;
@@ -190,21 +205,6 @@ public class OnlineMapsRawImageTouchForwarder : MonoBehaviour
         }
         
         return 0;
-    }
-
-    private int GetTouchCountFromForwarder()
-    {
-        if (target != image.gameObject) return 0;
-
-#if UNITY_EDITOR
-        return OnlineMapsInput.GetMouseButton(0) ? 1 : 0;
-#else
-        if (OnlineMapsInput.touchSupported)
-        {
-            if (OnlineMapsInput.touchCount > 0) return OnlineMapsInput.touchCount;
-        }
-        return OnlineMapsInput.GetMouseButton(0) ? 1 : 0;
-#endif
     }
 
     private void OnUpdateBefore()

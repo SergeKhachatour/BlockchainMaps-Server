@@ -621,10 +621,10 @@ public class OnlineMapsWizard : EditorWindow
         providersTitle = OnlineMapsProvider.GetProvidersTitle();
         providerIndex = activeMapType.provider.index;
 
-#if UNITY_2019_1_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
         bool useSRP = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline != null;
 #else
-        bool useSRP = false;
+        bool useSRP = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset != null;
 #endif
 
         if (useSRP)

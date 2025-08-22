@@ -1135,7 +1135,7 @@ public class OnlineMapsTileSetControl : OnlineMapsControlBaseDynamicMesh
             if (h1 < elevationResolution) subMeshVZ = elevationResolution % h1 == 0 ? elevationResolution / h1 : elevationResolution / h1 + 1;
         }
 
-        float zoomScale = 1 - map.buffer.renderState.zoomScale / 2;
+        float zoomScale = Mathf.Pow(2, -map.buffer.renderState.zoomScale);
 
         double subMeshSizeX = sizeInScene.x / w1;
         double subMeshSizeY = sizeInScene.y / h1;

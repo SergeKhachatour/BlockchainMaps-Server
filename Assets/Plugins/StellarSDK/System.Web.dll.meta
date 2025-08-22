@@ -38,7 +38,8 @@ PluginImporter:
         CPU: AnyCPU
     WebGL:
       enabled: 0
-      settings: {}
+      settings:
+        CPU: None
   userData: 
   assetBundleName: 
   assetBundleVariant: 

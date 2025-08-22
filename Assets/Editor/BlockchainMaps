@@ -1,0 +1,219 @@
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UI;
+using TMPro;
+using BlockchainMaps.Wallet;
+
+namespace BlockchainMaps.Wallet.Editor
+{
+    public class WalletUIPrefabSetup
+    {
+        private const string PREFAB_PATH = "Assets/Prefabs/WalletUI.prefab";
+
+        [MenuItem("BlockchainMaps/Wallet UI", false, 12)]
+        public static void CreateWalletUI()
+        {
+            // Create Canvas
+            GameObject canvasObj = new GameObject("WalletCanvas");
+            Canvas canvas = canvasObj.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvasObj.AddComponent<CanvasScaler>();
+            canvasObj.AddComponent<GraphicRaycaster>();
+
+            // Create main panel
+            GameObject panelObj = CreateUIElement("WalletPanel", canvasObj);
+            RectTransform panelRect = panelObj.GetComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(1, 0);
+            panelRect.anchorMax = new Vector2(1, 1);
+            panelRect.pivot = new Vector2(1, 0.5f);
+            panelRect.sizeDelta = new Vector2(300, 0);
+            panelRect.anchoredPosition = Vector2.zero;
+
+            Image panelImage = panelObj.AddComponent<Image>();
+            panelImage.color = new Color(0, 0, 0, 0.8f);
+
+            // Add components
+            WalletUIManager uiManager = panelObj.AddComponent<WalletUIManager>();
+
+            // Create UI elements
+            GameObject balanceText = CreateTextElement("BalanceText", panelObj, "Balance: 0 XLM");
+            GameObject addressText = CreateTextElement("AddressText", panelObj, "Not Connected");
+            GameObject statusText = CreateTextElement("StatusText", panelObj, "");
+
+            GameObject connectButton = CreateButton("ConnectButton", panelObj, "Connect Wallet");
+            GameObject disconnectButton = CreateButton("DisconnectButton", panelObj, "Disconnect");
+            GameObject generateQRButton = CreateButton("GenerateQRButton", panelObj, "Show QR");
+            GameObject scanQRButton = CreateButton("ScanQRButton", panelObj, "Scan QR");
+
+            // Create QR display
+            GameObject qrDisplay = CreateUIElement("QRDisplay", panelObj);
+            RectTransform qrRect = qrDisplay.GetComponent<RectTransform>();
+            qrRect.sizeDelta = new Vector2(200, 200);
+            RawImage qrImage = qrDisplay.AddComponent<RawImage>();
+            qrImage.color = Color.white;
+
+            // Create payment panel
+            GameObject paymentPanel = CreateUIElement("PaymentPanel", panelObj);
+            paymentPanel.SetActive(false);
+
+            GameObject paymentAmountText = CreateTextElement("PaymentAmountText", paymentPanel, "Amount: 0 XLM");
+            GameObject paymentAddressText = CreateTextElement("PaymentAddressText", paymentPanel, "To: ");
+            GameObject paymentMemoText = CreateTextElement("PaymentMemoText", paymentPanel, "Memo: ");
+
+            GameObject confirmButton = CreateButton("ConfirmButton", paymentPanel, "Confirm");
+            GameObject cancelButton = CreateButton("CancelButton", paymentPanel, "Cancel");
+
+            // Create blockchain logo
+            GameObject blockchainLogoObj = CreateUIElement("BlockchainLogo", panelObj);
+            RectTransform logoRect = blockchainLogoObj.GetComponent<RectTransform>();
+            logoRect.anchorMin = new Vector2(1, 1);
+            logoRect.anchorMax = new Vector2(1, 1);
+            logoRect.pivot = new Vector2(1, 1);
+            logoRect.anchoredPosition = new Vector2(-10, -10);
+            logoRect.sizeDelta = new Vector2(40, 40);
+
+            Image logoImage = blockchainLogoObj.AddComponent<Image>();
+            logoImage.preserveAspect = true;
+
+            // Load logo sprites
+            string stellarLogoPath = "Assets/Resources/Images/stellar-logo.png";
+            string circleLogoPath = "Assets/Resources/Images/circle-logo.png";
+
+            // Ensure the Resources/Images directory exists
+            if (!System.IO.Directory.Exists("Assets/Resources/Images"))
+            {
+                System.IO.Directory.CreateDirectory("Assets/Resources/Images");
+            }
+
+            // Create placeholder logos if they don't exist
+            CreatePlaceholderLogo(stellarLogoPath, Color.blue);
+            CreatePlaceholderLogo(circleLogoPath, Color.green);
+
+            // Layout everything
+            VerticalLayoutGroup layout = panelObj.AddComponent<VerticalLayoutGroup>();
+            layout.padding = new RectOffset(10, 10, 10, 10);
+            layout.spacing = 10;
+            layout.childAlignment = TextAnchor.UpperCenter;
+            layout.childControlHeight = false;
+            layout.childControlWidth = true;
+            layout.childForceExpandHeight = false;
+            layout.childForceExpandWidth = true;
+
+            // Assign references to WalletUIManager
+            uiManager.qrCodeDisplay = qrImage;
+            uiManager.balanceText = balanceText.GetComponent<TextMeshProUGUI>();
+            uiManager.addressText = addressText.GetComponent<TextMeshProUGUI>();
+            uiManager.statusText = statusText.GetComponent<TextMeshProUGUI>();
+            uiManager.connectWalletButton = connectButton.GetComponent<Button>();
+            uiManager.disconnectWalletButton = disconnectButton.GetComponent<Button>();
+            uiManager.generateQRButton = generateQRButton.GetComponent<Button>();
+            uiManager.scanQRButton = scanQRButton.GetComponent<Button>();
+            uiManager.paymentPanel = paymentPanel;
+            uiManager.paymentAmountText = paymentAmountText.GetComponent<TextMeshProUGUI>();
+            uiManager.paymentAddressText = paymentAddressText.GetComponent<TextMeshProUGUI>();
+            uiManager.paymentMemoText = paymentMemoText.GetComponent<TextMeshProUGUI>();
+            uiManager.confirmPaymentButton = confirmButton.GetComponent<Button>();
+            uiManager.cancelPaymentButton = cancelButton.GetComponent<Button>();
+            uiManager.blockchainLogo = logoImage;
+            uiManager.stellarLogo = AssetDatabase.LoadAssetAtPath<Sprite>(stellarLogoPath);
+            uiManager.circleLogo = AssetDatabase.LoadAssetAtPath<Sprite>(circleLogoPath);
+
+            // Create prefab
+            string directory = System.IO.Path.GetDirectoryName(PREFAB_PATH);
+            if (!System.IO.Directory.Exists(directory))
+            {
+                System.IO.Directory.CreateDirectory(directory);
+            }
+
+            // Save prefab
+            bool success = false;
+            PrefabUtility.SaveAsPrefabAsset(canvasObj, PREFAB_PATH, out success);
+            if (success)
+            {
+                Debug.Log("Wallet UI prefab created successfully at " + PREFAB_PATH);
+            }
+            else
+            {
+                Debug.LogError("Failed to create Wallet UI prefab!");
+            }
+
+            // Cleanup
+            Object.DestroyImmediate(canvasObj);
+
+            // Select the created prefab
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath<GameObject>(PREFAB_PATH);
+        }
+
+        private static GameObject CreateUIElement(string name, GameObject parent)
+        {
+            GameObject obj = new GameObject(name);
+            obj.transform.SetParent(parent.transform, false);
+            obj.AddComponent<RectTransform>();
+            return obj;
+        }
+
+        private static GameObject CreateTextElement(string name, GameObject parent, string defaultText)
+        {
+            GameObject obj = CreateUIElement(name, parent);
+            TextMeshProUGUI tmp = obj.AddComponent<TextMeshProUGUI>();
+            tmp.text = defaultText;
+            tmp.fontSize = 14;
+            tmp.alignment = TextAlignmentOptions.Center;
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(0, 30);
+            return obj;
+        }
+
+        private static GameObject CreateButton(string name, GameObject parent, string text)
+        {
+            GameObject obj = CreateUIElement(name, parent);
+            Image image = obj.AddComponent<Image>();
+            Button button = obj.AddComponent<Button>();
+            button.targetGraphic = image;
+
+            GameObject textObj = CreateTextElement(name + "Text", obj, text);
+            RectTransform textRect = textObj.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.sizeDelta = Vector2.zero;
+
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(0, 40);
+
+            return obj;
+        }
+
+        private static void CreatePlaceholderLogo(string path, Color color)
+        {
+            if (!System.IO.File.Exists(path))
+            {
+                // Create a simple 64x64 texture
+                Texture2D tex = new Texture2D(64, 64);
+                Color[] colors = new Color[64 * 64];
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    colors[i] = color;
+                }
+                tex.SetPixels(colors);
+                tex.Apply();
+
+                // Save the texture as PNG
+                byte[] bytes = tex.EncodeToPNG();
+                System.IO.File.WriteAllBytes(path, bytes);
+                AssetDatabase.ImportAsset(path);
+
+                // Configure the texture import settings
+                TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                if (importer != null)
+                {
+                    importer.textureType = TextureImporterType.Sprite;
+                    importer.spritePixelsPerUnit = 100;
+                    importer.mipmapEnabled = false;
+                    importer.filterMode = FilterMode.Bilinear;
+                    importer.textureCompression = TextureImporterCompression.Uncompressed;
+                    importer.SaveAndReimport();
+                }
+            }
+        }
+    }
+} 

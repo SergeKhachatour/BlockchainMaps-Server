@@ -75,26 +75,28 @@ public abstract class OnlineMapsTiledElevationManager<T> : OnlineMapsElevationMa
             tiles = new Dictionary<ulong, Tile>();
             return 0;
         }
-        x = x / -sizeInScene.x;
-        z = z / sizeInScene.y;
+        x /= -sizeInScene.x;
+        z /= sizeInScene.y;
 
-        double ttlx, ttly, tbrx, tbry;
 
         OnlineMaps m = map;
+        int mapZoom = m.zoom;
         OnlineMapsProjection projection = m.projection;
 
-        projection.CoordinatesToTile(tlx, tly, m.zoom, out ttlx, out ttly);
-        projection.CoordinatesToTile(brx, bry, m.zoom, out tbrx, out tbry);
+        double ttlx, ttly, tbrx, tbry;
+        projection.CoordinatesToTile(tlx, tly, mapZoom, out ttlx, out ttly);
+        projection.CoordinatesToTile(brx, bry, mapZoom, out tbrx, out tbry);
 
-        if (tbrx < ttlx) tbrx += 1 << m.zoom;
+        if (tbrx < ttlx) tbrx += 1 << mapZoom;
 
         double cx = (tbrx - ttlx) * x + ttlx;
         double cz = (tbry - ttly) * z + ttly;
 
-        int zoom = m.zoom - zoomOffset;
-        double tx, ty;
-        projection.TileToCoordinates(cx, cz, m.zoom, out cx, out cz);
-        projection.CoordinatesToTile(cx, cz, zoom, out tx, out ty);
+        int zoom = mapZoom - zoomOffset;
+        int zs = 1 << zoomOffset;
+        double tx = cx / zs;
+        double ty = cz / zs;
+        
         int ix = (int)tx;
         int iy = (int)ty;
 
@@ -102,17 +104,21 @@ public abstract class OnlineMapsTiledElevationManager<T> : OnlineMapsElevationMa
         Tile tile;
         bool hasTile = tiles.TryGetValue(key, out tile);
         if (hasTile && !tile.loaded) hasTile = false;
+        
+        const int maxZoomOffset = 3;
 
         if (!hasTile)
         {
             int nz = zoom;
+            int offset = 0;
 
-            while (!hasTile && nz < OnlineMaps.MAXZOOM)
+            while (!hasTile && nz < OnlineMaps.MAXZOOM && offset < maxZoomOffset)
             {
                 nz++;
-                projection.CoordinatesToTile(cx, cz, nz, out tx, out ty);
-                ix = (int)tx;
-                iy = (int)ty;
+                offset++;
+                zs = 1 << offset;
+                ix = (int)(tx * zs);
+                iy = (int)(ty * zs);
                 key = OnlineMapsTileManager.GetTileKey(nz, ix, iy);
 
                 hasTile = tiles.TryGetValue(key, out tile) && tile.loaded;
@@ -122,13 +128,15 @@ public abstract class OnlineMapsTiledElevationManager<T> : OnlineMapsElevationMa
         if (!hasTile)
         {
             int nz = zoom;
+            int offset = 0;
 
-            while (!hasTile && nz > 1)
+            while (!hasTile && nz > 1 && offset < maxZoomOffset)
             {
                 nz--;
-                projection.CoordinatesToTile(cx, cz, nz, out tx, out ty);
-                ix = (int)tx;
-                iy = (int)ty;
+                offset++;
+                zs = 1 << offset;
+                ix = (int)(tx / zs);
+                iy = (int)(ty / zs);
                 key = OnlineMapsTileManager.GetTileKey(nz, ix, iy);
 
                 hasTile = tiles.TryGetValue(key, out tile) && tile.loaded;
@@ -137,7 +145,19 @@ public abstract class OnlineMapsTiledElevationManager<T> : OnlineMapsElevationMa
 
         if (!hasTile) return 0;
 
-        projection.CoordinatesToTile(cx, cz, tile.zoom, out tx, out ty);
+        int zo = tile.zoom - zoom;
+        zs = 1 << Math.Abs(zo);
+        if (zo >= 0)
+        {
+            tx *= zs;
+            ty *= zs;
+        }
+        else
+        {
+            tx /= zs;
+            ty /= zs;
+        }
+        
         return tile.GetElevation(tx, ty);
     }
 

@@ -3,6 +3,8 @@
 
 #if (!UNITY_WP_8_1 && !UNITY_WEBGL) || UNITY_EDITOR
 #define ALLOW_FILECACHE
+#elif UNITY_WEBGL && UNITY_2020_2_OR_NEWER
+#define ALLOW_FILECACHE
 #endif
 
 using System;
